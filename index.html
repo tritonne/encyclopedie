@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Encyclopédie</title>
-<meta name="theme-color" content="#13313a">
+<meta name="theme-color" content="#0e1e23">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/png" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -1809,6 +1809,104 @@ body.has-banner #view-bureau{padding-top:58px}
 .upd{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:1500;display:flex;align-items:center;gap:14px;background:var(--tealD,#13313a);color:#fff;border-radius:999px;padding:8px 8px 8px 20px;box-shadow:0 18px 34px -14px rgba(0,0,0,.6);animation:cardIn .5s var(--ease-pop) both}
 .upd[hidden]{display:none}
 .upd button{border:none;border-radius:999px;background:#fff;color:#13313a;font:inherit;font-weight:700;padding:7px 16px;cursor:pointer}
+
+/* ================= CADRE, BARRE DU HAUT, TIROIR ================= */
+:root{--frame:hsl(var(--h) calc(34% * var(--sf)) 7%)}
+header.top{background:var(--frame)!important;transition:transform .35s var(--ease-pop),opacity .25s,background-color .5s}
+header.top .brand h1{color:#f1f5f6}
+/* trois barres */
+.burger{position:fixed;left:12px;top:6px;z-index:1250;width:34px;height:34px;border-radius:11px;border:1px solid color-mix(in srgb,#fff 14%,transparent);background:color-mix(in srgb,var(--frame) 80%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:0;cursor:pointer;transition:background-color .25s,transform .25s var(--ease-pop)}
+.burger:hover{background:color-mix(in srgb,#fff 14%,var(--frame));transform:scale(1.06)}
+.burger i{display:block;width:16px;height:2px;border-radius:2px;background:#f1f5f6;transition:transform .35s var(--ease-pop),opacity .2s}
+body.nav-open .burger i:nth-child(1){transform:translateY(6px) rotate(45deg)}
+body.nav-open .burger i:nth-child(2){opacity:0}
+body.nav-open .burger i:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+#app[hidden] ~ .burger,#app[hidden] ~ nav{display:none}
+.nav-scrim{position:fixed;inset:0;z-index:1090;background:rgba(4,10,12,.42);opacity:0;visibility:hidden;transition:opacity .3s,visibility 0s .3s}
+body.nav-open .nav-scrim{opacity:1;visibility:visible;transition:opacity .3s,visibility 0s}
+#app nav.tabs,nav.tabs#drawer{position:fixed!important;left:8px!important;top:8px!important;bottom:8px!important;right:auto!important;transform:translateX(calc(-100% - 24px))!important;width:240px;height:auto!important;z-index:1100;display:flex;flex-direction:column;align-items:stretch;gap:4px!important;padding:58px 12px 16px!important;margin:0!important;border-radius:20px!important;background:color-mix(in srgb,var(--frame) 94%,transparent)!important;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid color-mix(in srgb,#fff 10%,transparent)!important;box-shadow:0 30px 60px -20px rgba(0,0,0,.7)!important;transition:transform .42s var(--ease-pop)!important}
+body.nav-open nav.tabs#drawer{transform:none!important}
+.dr-title{position:absolute;left:62px;top:9px;color:#f1f5f6;font-weight:300;letter-spacing:.3em;text-transform:uppercase;font-size:.78rem;line-height:1.1}
+.dr-title small{display:block;text-transform:none;letter-spacing:.14em;font-size:.62rem;opacity:.55;margin-top:2px}
+nav.tabs#drawer button{display:flex;align-items:center;gap:14px;height:46px!important;padding:0 16px!important;border-radius:14px!important;font-size:.98rem!important;justify-content:flex-start;background:transparent!important;border:1px solid transparent!important;color:color-mix(in srgb,#fff 70%,transparent)!important;position:relative;transform:none!important}
+nav.tabs#drawer button:hover{background:color-mix(in srgb,#fff 9%,transparent)!important;color:#fff!important}
+nav.tabs#drawer button[aria-selected="true"]{background:color-mix(in srgb,#fff 14%,transparent)!important;color:#fff!important;border-color:color-mix(in srgb,#fff 16%,transparent)!important}
+nav.tabs#drawer button[aria-selected="true"]::before{content:"";position:absolute;left:-12px;top:12px;bottom:12px;width:4px;border-radius:4px;background:var(--accent,#9fd8c0)}
+nav.tabs#drawer button svg{flex:none}
+/* plus de pastille flottante : les vues n'ont plus à lui laisser de place */
+#view-especes,#view-bureau{padding-top:14px!important}
+#view-arbre .treebar,#view-arbre.tbopen .treebar{padding-top:14px!important}
+/* mode application : fenêtre sombre, contenu en cadre aux coins arrondis, barre du haut au survol */
+body.pwa{background:var(--frame)}
+body.pwa #app{height:calc(100vh - 12px);margin:6px;border-radius:18px;overflow:hidden;background:var(--mist);isolation:isolate}
+body.pwa header.top{position:fixed;left:6px;right:6px;top:6px;height:46px;border-radius:18px 18px 0 0;z-index:1000;transform:translateY(-105%);opacity:0;pointer-events:none;background:color-mix(in srgb,var(--frame) 92%,transparent)!important;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+body.pwa.hdr header.top{transform:none;opacity:1;pointer-events:auto}
+body.pwa .burger{top:12px;left:16px}
+body.pwa.wco header.top .brand{-webkit-app-region:drag;app-region:drag;pointer-events:auto}
+body.pwa.wco::before{content:"";position:fixed;left:0;right:0;top:0;height:5px;-webkit-app-region:drag;app-region:drag;z-index:1}
+body.pwa #view-especes,body.pwa #view-bureau{padding-top:56px!important}
+body.pwa #view-arbre .treebar,body.pwa #view-arbre.tbopen .treebar{padding-top:56px!important}
+body.pwa #view-arbre .treewrap{margin-top:0}
+body.pwa .leaflet-top.leaflet-left{margin-top:50px}
+body.pwa .statchip{left:20px;bottom:18px}
+body.pwa .fab{right:26px;bottom:26px}
+body.pwa .upd{bottom:26px}
+@media (max-width:700px){header.top .brand{position:static;transform:none}}
+
+/* ================= BUREAU : pleine largeur, post-it libres, météo réduite ================= */
+.page.bureau{max-width:1840px;padding:14px clamp(14px,2.2vw,36px) 60px;position:relative}
+.bd-top-r{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.span8{grid-column:span 8}.span4{grid-column:span 4}.span12{grid-column:span 12}
+@media(max-width:1100px){.span8,.span4{grid-column:span 12}}
+@media(min-width:1100px) and (max-width:1400px){.span4{grid-column:span 6}.span8{grid-column:span 12}}
+.bd-link{border:none;background:none;color:var(--teal);font:inherit;font-size:.85rem;cursor:pointer;padding:2px 8px;border-radius:8px}
+.bd-link:hover{background:var(--tint)}
+.bd-card.wxcard{transition:none}
+/* post-it : calque sur toute la page, au-dessus des cartes */
+.board{position:absolute;left:0;right:0;top:0;bottom:0;height:auto;border:none;background:none;border-radius:0;overflow:visible;pointer-events:none;z-index:40}
+.board .pi{pointer-events:auto}
+/* météo réduite */
+.wx-row.compact{gap:10px}
+.wx-mini{display:flex;align-items:center;gap:12px;min-width:250px;padding:10px 14px 10px 10px;border-radius:16px;border:1px solid var(--line);background:var(--tint);color:var(--ink);text-align:left;cursor:pointer;transition:transform .25s var(--ease-pop),border-color .2s,background-color .2s;animation:cardIn .4s var(--ease-pop) both}
+.wx-mini:hover{transform:translateY(-2px);border-color:var(--teal)}
+.wm-ico{flex:none;width:38px;height:38px;display:grid;place-items:center}
+.wm-main{display:flex;flex-direction:column;min-width:0}.wm-main b{font-size:.95rem}.wm-now{color:var(--ink2);font-size:.82rem}
+.wm-next{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;padding-left:12px;border-left:1px solid var(--line);font-size:.82rem}
+.wm-next small{color:var(--ink2);font-size:.68rem;text-transform:uppercase;letter-spacing:.05em}
+.wm-next span{display:flex;align-items:center;gap:4px}.wm-next em{font-style:normal;font-weight:600}
+.wx-row.compact .wx-add{width:44px;min-height:58px}
+
+.bd-main{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:16px;align-items:start}
+.bd-col{display:flex;flex-direction:column;gap:16px;min-width:0}
+.bd-two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+@media(max-width:1100px){.bd-main{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:760px){.bd-two{grid-template-columns:minmax(0,1fr)}}
+.pi-grip{flex:1;align-self:stretch;min-height:22px;cursor:grab;background:radial-gradient(circle,rgba(58,51,32,.35) 1.2px,transparent 1.6px) center/6px 6px repeat-x;opacity:.7}
+.pi-b.x{margin-left:0}
+
+/* iNaturalist : jauge + carte */
+.in-gauge{min-width:260px;flex:1 1 280px;max-width:420px}
+.in-gauge b{color:var(--ink);font-weight:700}
+.in-gauge input[type=range]{width:100%;accent-color:var(--teal);margin:4px 0 0}
+.in-ticks{display:flex;justify-content:space-between;font-size:.66rem;color:var(--ink2)}.in-ticks i{font-style:normal}
+.in-wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+@media(max-width:1000px){.in-wrap{grid-template-columns:minmax(0,1fr)}}
+.in-left .in-list{grid-template-columns:repeat(auto-fill,minmax(230px,1fr));max-height:540px;overflow:auto;padding:2px 4px 2px 2px;align-content:start}
+.in-t{text-align:left;background:none;font:inherit;cursor:pointer}
+.in-t.sel{border-color:var(--teal);background:var(--tint);box-shadow:0 0 0 2px color-mix(in srgb,var(--teal) 35%,transparent)}
+.in-mapbox{position:sticky;top:60px}
+.in-maphead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px;font-size:.88rem;font-weight:600}
+.in-maphead a{font-weight:400;font-size:.8rem;color:var(--teal)}
+.in-map{height:540px;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:var(--tint)}
+@media(max-width:1000px){.in-map{height:340px}.in-mapbox{position:static}}
+
+/* colonne des rangs de l'arbre : rétractable */
+#tree-gutter{transition:opacity .25s ease,visibility 0s}
+#tree-svg.gut-off #tree-gutter{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s ease,visibility 0s .25s}
+.gut-toggle{position:absolute;top:50%;z-index:6;width:26px;height:26px;margin-top:-13px;border-radius:50%;border:1px solid var(--line);background:var(--paper);color:var(--ink2);display:grid;place-items:center;padding:0;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.14);transition:left .3s var(--ease-pop),background-color .2s,color .2s,transform .2s}
+.gut-toggle:hover{background:var(--teal);color:#fff;border-color:var(--teal)}
+.gut-toggle svg{transition:transform .3s var(--ease-pop)}
+.gut-toggle.closed svg{transform:rotate(180deg)}
 </style>
 </head>
 <body>
@@ -1845,13 +1943,16 @@ body.has-banner #view-bureau{padding-top:58px}
 <div id="app" hidden>
   <header class="top">
     <div class="brand"><h1 aria-label="Encyclopédie"><span style="--d:0ms" aria-hidden="true">E</span><span style="--d:110ms" aria-hidden="true">n</span><span style="--d:220ms" aria-hidden="true">c</span><span style="--d:330ms" aria-hidden="true">y</span><span style="--d:440ms" aria-hidden="true">c</span><span style="--d:550ms" aria-hidden="true">l</span><span style="--d:660ms" aria-hidden="true">o</span><span style="--d:770ms" aria-hidden="true">p</span><span style="--d:880ms" aria-hidden="true">é</span><span style="--d:990ms" aria-hidden="true">d</span><span style="--d:1100ms" aria-hidden="true">i</span><span style="--d:1210ms" aria-hidden="true">e</span></h1></div>
-    <nav class="tabs" role="tablist" aria-label="Sections">
-      <button role="tab" data-view="bureau" aria-selected="true">Bureau</button>
-      <button role="tab" data-view="carte" aria-selected="false">Carte</button>
-      <button role="tab" data-view="especes" aria-selected="false">Espèces</button>
-      <button role="tab" data-view="arbre" aria-selected="false">Arbre</button>
-    </nav>
   </header>
+  <div id="nav-scrim" class="nav-scrim"></div>
+  <nav class="tabs" id="drawer" role="tablist" aria-label="Sections">
+    <div class="dr-title">Encyclopédie<small>tritonne.photography</small></div>
+      <button role="tab" data-view="bureau" aria-selected="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-6 8 6v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg><span>Bureau</span></button>
+      <button role="tab" data-view="carte" aria-selected="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4L3 6.5v13L9 17l6 3 6-2.500v-13L15 7zM9 4v13M15 7v13"/></svg><span>Carte</span></button>
+      <button role="tab" data-view="especes" aria-selected="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-4.500-7-10a4 4 0 0 1 7-2.600A4 4 0 0 1 19 11c0 5.500-7 10-7 10z"/></svg><span>Espèces</span></button>
+      <button role="tab" data-view="arbre" aria-selected="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M12 8l-5 4M12 12l5-4M12 16l-4 3M12 16l4 3"/></svg><span>Arbre</span></button>
+  </nav>
+  <button type="button" id="burger" class="burger" aria-label="Menu des onglets" aria-expanded="false" aria-controls="drawer"><i></i><i></i><i></i></button>
   <div id="hstatus" class="statchip" aria-live="polite"></div>
   <button class="avatar fab" id="fab" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Menu : couleurs, mode sombre, contrôles" title="Menu (glisse pour me déplacer)"><span class="fab-badge" id="fab-badge" hidden></span></button>
 <div id="fabmenu" hidden role="menu" aria-label="Menu">
@@ -1950,6 +2051,7 @@ body.has-banner #view-bureau{padding-top:58px}
     </div>
     <div class="treewrap" id="treewrap">
       <button class="loupe tbtoggle" id="tbar-toggle" type="button" aria-expanded="false" aria-controls="tbar" aria-label="Outils de l'arbre" title="Rechercher et outils"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><span class="fbadge" id="tb-badge" hidden></span></button>
+      <button type="button" class="gut-toggle" id="gutter-toggle" aria-expanded="true" aria-label="Replier la colonne des rangs" title="Replier la colonne des rangs"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
       <svg id="tree-svg" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Arbre de classification de mes espèces">
         <g id="tree-view"><g id="tree-lines"></g><g id="tree-edges"></g><g id="tree-nodes"></g></g>
         <g id="tree-gutter"></g>
@@ -3399,7 +3501,7 @@ function closeLightbox() { S.lbTok = (S.lbTok || 0) + 1; $$('.lb-nav').forEach(b
 const TREE_RANKS = ['Règne', 'Embranchement', 'Sous-embranchement', 'Classe', 'Ordre', 'Famille', 'Genre'];
 const TREE_LEAF = TREE_RANKS.length;
 const TREE_ROWS = TREE_RANKS.concat(['Espèce']);
-const TREE_GUTTER = 164, TREE_NEUTRAL = '#a7b3b7', TREE_FONT = '600 13.5px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
+let TREE_GUTTER = 164; const TREE_G0 = 164, TREE_NEUTRAL = '#a7b3b7', TREE_FONT = '600 13.5px system-ui, -apple-system, "Segoe UI", Roboto, sans-serif';
 let treeCtx = null;
 function treeText(s) {
   if (!treeCtx) { treeCtx = document.createElement('canvas').getContext('2d'); treeCtx.font = TREE_FONT; }
@@ -3449,7 +3551,7 @@ function treeLayout() {
   };
   let x = 24; roots.forEach(r => { place(r, x); x += r.w; });
   T.W = x + 24;
-  T.y = []; let y = 34;
+  T.y = []; let y = encIsApp() ? 64 : 34;
   for (let l = 0; l <= TREE_LEAF; l++) { if (l) y += need[l] ? Math.max(l === TREE_LEAF ? 96 : 120, need[l]) : (l === TREE_LEAF ? 68 : 58); T.y.push(y); }
   T.H = T.y[TREE_LEAF] + 74;
   T.nLeaves = nLeaves; T.vis = vis;
@@ -3682,6 +3784,11 @@ function bindTree() {
     if (l) { S.sheetList = Array.from(S.tree.leafBy.keys()); openSpecies(l.dataset.id); } else if (n) treeToggle(n.dataset.key); else treeClearHl();
   });
   const mid = () => ({ x: (TREE_GUTTER + svg.clientWidth) / 2, y: svg.clientHeight / 2 });
+  const gb = $('#gutter-toggle');
+  const setGutter = (open, noSave) => { TREE_GUTTER = open ? TREE_G0 : 0; $('#tree-svg').classList.toggle('gut-off', !open); gb.classList.toggle('closed', !open); gb.style.left = open ? (TREE_G0 - 13) + 'px' : '8px'; gb.setAttribute('aria-expanded', String(open)); gb.title = open ? 'Replier la colonne des rangs' : 'Déplier la colonne des rangs';
+    if (S.tree) { treeDraw(); treeClamp(); treeApply(); } if (!noSave) { try { localStorage.setItem('enc_gutter', open ? '1' : '0'); } catch (_) { /* rien */ } } };
+  let gOpen = true; try { gOpen = localStorage.getItem('enc_gutter') !== '0'; } catch (_) { /* rien */ }
+  setGutter(gOpen, true); gb.addEventListener('click', () => setGutter(TREE_GUTTER === 0));
   $('#tree-zin').addEventListener('click', () => { if (S.tree) { const m = mid(); treeZoomAt(m.x, m.y, 1.3); } });
   $('#tree-zout').addEventListener('click', () => { if (S.tree) { const m = mid(); treeZoomAt(m.x, m.y, 1 / 1.3); } });
   $('#tree-fit').addEventListener('click', () => { if (S.tree) treeFit(0.12); });
@@ -3792,7 +3899,7 @@ function showView(v) {
   if (v === 'carte') { ensureMap(); setTimeout(() => { S.map.invalidateSize(); }, 30); if (!S.ready) { refreshMap(true); S.ready = true; } }
   if (v === 'especes') renderSpecies();
   if (v === 'arbre') renderTree();
-  if (v === 'bureau') renderBureau();
+  if (v === 'bureau') { renderBureau(); setTimeout(() => { if (inatMap) inatMap.invalidateSize(); }, 450); }
 }
 
 /* =====================================================================
@@ -4464,7 +4571,7 @@ S._analyze = analyzeCanvas; S._box = photoBox; S._framePad = framePad; S._buildD
 const BD_KEY = 'enc_bureau_v1', WX_KEY = 'enc_wx_v1';
 const bdRep = (k, v) => (k[0] === '_' ? undefined : v);
 const bdId = () => Math.random().toString(36).slice(2, 9);
-const bdDef = () => ({ v: 1, t: 0, cities: [], notes: [], outings: [], inat: { place: null, radius: 25 } });
+const bdDef = () => ({ v: 2, t: 0, cities: [], notes: [], outings: [], ui: { wxOpen: false }, inat: { place: null, radius: 25 } });
 let BD = null, bdT = null, bdAsked = false, bdSel = 0, bdWxDay = 0, bdMonth = null, bdZ = 10, bdStore = 'nav';
 const BD_COLORS = ['#fde68a', '#fbcfe8', '#bfdbfe', '#bbf7d0', '#e9d5ff', '#fed7aa'];
 const bdToday = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
@@ -4487,7 +4594,7 @@ async function bdCanWrite(ask) {
   try { if ((await h.queryPermission({ mode: 'readwrite' })) === 'granted') return true; if (ask) return (await h.requestPermission({ mode: 'readwrite' })) === 'granted'; } catch (_) { /* refusé */ }
   return false;
 }
-function bdNorm(o) { const d = bdDef(); if (!o || typeof o !== 'object') return d; return Object.assign(d, o, { cities: Array.isArray(o.cities) ? o.cities : [], notes: Array.isArray(o.notes) ? o.notes : [], outings: Array.isArray(o.outings) ? o.outings : [], inat: Object.assign(d.inat, o.inat || {}) }); }
+function bdNorm(o) { const d = bdDef(); if (!o || typeof o !== 'object') return d; return Object.assign(d, o, { cities: Array.isArray(o.cities) ? o.cities : [], notes: Array.isArray(o.notes) ? o.notes : [], outings: Array.isArray(o.outings) ? o.outings : [], inat: Object.assign(d.inat, o.inat || {}), ui: Object.assign(d.ui, o.ui || {}) }); }
 async function bdInit() {
   let loc = null; try { loc = JSON.parse(localStorage.getItem(BD_KEY) || 'null'); } catch (_) { /* rien */ }
   BD = bdNorm(loc);
@@ -4547,17 +4654,30 @@ function wxIcon(code, day, sz) {
   return '<svg class="wxi" viewBox="0 0 48 48" width="' + (sz || 44) + '" height="' + (sz || 44) + '" aria-hidden="true">' + g + '</svg>';
 }
 async function renderWeather() {
-  const box = $('#bd-wx'); if (!box || !BD) return;
+  const box = $('#bd-wx'); if (!box || !BD) return; const open = !!(BD.ui && BD.ui.wxOpen), card = $('#bd-wxcard'); if (card) card.classList.toggle('open', open);
+  const tg = $('#bd-wx-toggle'); if (tg) { tg.hidden = !BD.cities.length; tg.textContent = open ? 'Réduire' : 'Détails'; tg.setAttribute('aria-expanded', String(open)); }
   if (!BD.cities.length) { box.innerHTML = '<div class="bd-empty">Ajoute une ville pour voir la météo.<br><button class="btn small" data-bd="city-add" type="button">+ Ajouter une ville</button></div>'; $('#bd-wx-detail').innerHTML = ''; renderLight(); renderInat(); return; }
   if (bdSel >= BD.cities.length) bdSel = 0;
-  const cards = BD.cities.map((c, i) => '<button class="wx-card' + (i === bdSel ? ' on' : '') + '" type="button" data-bd="city-sel" data-i="' + i + '"><span class="wx-x" data-bd="city-del" data-i="' + i + '" title="Retirer cette ville" aria-label="Retirer ' + esc(c.name) + '">×</span><span class="wx-name">' + esc(c.name) + '</span><span class="wx-ico">…</span><span class="wx-temp">–</span></button>').join('');
-  box.innerHTML = cards + '<button class="wx-add" type="button" data-bd="city-add" aria-label="Ajouter une ville" title="Ajouter une ville"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>';
+  const add = '<button class="wx-add" type="button" data-bd="city-add" aria-label="Ajouter une ville" title="Ajouter une ville"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>';
+  const cards = BD.cities.map((c, i) => open
+    ? '<button class="wx-card' + (i === bdSel ? ' on' : '') + '" type="button" data-bd="city-sel" data-i="' + i + '"><span class="wx-x" data-bd="city-del" data-i="' + i + '" title="Retirer cette ville" aria-label="Retirer ' + esc(c.name) + '">×</span><span class="wx-name">' + esc(c.name) + '</span><span class="wx-ico">…</span><span class="wx-temp">–</span></button>'
+    : '<button class="wx-mini' + (i === bdSel ? ' on' : '') + '" type="button" data-bd="wx-open" data-i="' + i + '" title="Voir le détail"><span class="wm-ico">…</span><span class="wm-main"><b>' + esc(c.name) + '</b><span class="wm-now">–</span></span><span class="wm-next"><small>dans 1 h</small><span>–</span></span></button>').join('');
+  box.className = 'wx-row' + (open ? '' : ' compact'); box.innerHTML = cards + add;
   await Promise.all(BD.cities.map(async (c, i) => {
-    const el = box.querySelectorAll('.wx-card')[i]; if (!el) return;
-    try { const d = await wxGet(c); c._d = d; el.querySelector('.wx-ico').innerHTML = wxIcon(d.current.weather_code, !!d.current.is_day, 40); el.querySelector('.wx-temp').textContent = Math.round(d.current.temperature_2m) + '°'; el.title = WX_LAB(d.current.weather_code) + (d._old ? ' (dernière donnée connue)' : ''); }
-    catch (_) { el.querySelector('.wx-ico').innerHTML = ''; el.querySelector('.wx-temp').textContent = '×'; el.title = 'Météo indisponible (pas de connexion ?)'; }
+    const el = box.querySelectorAll(open ? '.wx-card' : '.wx-mini')[i]; if (!el) return;
+    try {
+      const d = await wxGet(c); c._d = d; const cur = d.current;
+      if (open) { el.querySelector('.wx-ico').innerHTML = wxIcon(cur.weather_code, !!cur.is_day, 40); el.querySelector('.wx-temp').textContent = Math.round(cur.temperature_2m) + '°'; }
+      else {
+        let k = d.hourly.time.indexOf(cur.time ? cur.time.slice(0, 13) + ':00' : ''); if (k < 0) k = 0; const n = Math.min(k + 1, d.hourly.time.length - 1), p = d.hourly.precipitation_probability[n];
+        el.querySelector('.wm-ico').innerHTML = wxIcon(cur.weather_code, !!cur.is_day, 38); el.querySelector('.wm-now').textContent = Math.round(cur.temperature_2m) + '° · ' + WX_LAB(cur.weather_code);
+        el.querySelector('.wm-next span').innerHTML = wxIcon(d.hourly.weather_code[n], !!d.hourly.is_day[n], 22) + '<em>' + Math.round(d.hourly.temperature_2m[n]) + '°' + (p ? ' · ' + p + ' %' : '') + '</em>';
+      }
+      el.title = WX_LAB(cur.weather_code) + (d._old ? ' (dernière donnée connue)' : '');
+    } catch (_) { const t = el.querySelector('.wx-temp,.wm-now'); if (t) t.textContent = '×'; el.title = 'Météo indisponible (pas de connexion ?)'; }
   }));
-  renderWxDetail(); renderLight(); renderInat();
+  if (open) renderWxDetail(); else { const dt = $('#bd-wx-detail'); if (dt) dt.innerHTML = ''; }
+  renderLight(); renderInat();
 }
 function renderWxDetail() {
   const box = $('#bd-wx-detail'); if (!box || !BD) return; const c = BD.cities[bdSel]; if (!c || !c._d) { box.innerHTML = c ? '<div class="bd-note">Météo indisponible pour le moment. Il faut une connexion internet.</div>' : ''; return; }
@@ -4645,26 +4765,30 @@ function outForm(o) {
   });
 }
 
-/* ---------- post-it ---------- */
+/* ---------- post-it : libres sur toute la page du Bureau ---------- */
 function renderBoard() {
   const b = $('#bd-board'); if (!b || !BD) return; const today = bdToday();
-  b.innerHTML = BD.notes.map(n => '<div class="pi' + (n.pin ? ' pin' : '') + '" data-id="' + n.id + '" style="left:' + (n.x * 100).toFixed(2) + '%;top:' + (n.y * 100).toFixed(2) + '%;background:' + n.c + ';--r:' + (n.r || 0) + 'deg;z-index:' + (n.pin ? 900 : (n.z || 1)) + '"><div class="pi-bar"><button type="button" class="pi-b" data-pi="pin" title="Épingler (toujours au-dessus)" aria-label="Épingler"><svg viewBox="0 0 24 24" width="14" height="14" fill="' + (n.pin ? 'currentColor' : 'none') + '" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M9 3h6l-1 6 3 3H7l3-3-1-6zM12 12v8"/></svg></button><button type="button" class="pi-b" data-pi="col" title="Changer de couleur" aria-label="Couleur"><i style="background:' + n.c + '"></i></button><label class="pi-date' + (n.date ? ' set' : '') + '" title="Associer une date">' + (n.date ? bdFmt(n.date, { day: 'numeric', month: 'short' }) + (n.date < today ? ' ·' : '') : 'date') + '<input type="date" value="' + esc(n.date || '') + '" data-pi="date"></label><button type="button" class="pi-b x" data-pi="del" title="Supprimer" aria-label="Supprimer">×</button></div><textarea data-pi="txt" rows="4" placeholder="Écris ici…" spellcheck="false">' + esc(n.text || '') + '</textarea></div>').join('') + (BD.notes.length ? '' : '<div class="board-empty">Ajoute un post-it : il se déplace où tu veux. Avec une date, il apparaît aussi dans le calendrier.</div>');
+  BD.notes.forEach(n => { if (n.y <= 1.5) n.y = 760 + n.y * 380; });   // anciens post-it : position relative au cadre → position sur la page
+  b.innerHTML = BD.notes.map(n => '<div class="pi' + (n.pin ? ' pin' : '') + '" data-id="' + n.id + '" style="left:' + (n.x * 100).toFixed(2) + '%;top:' + Math.round(n.y) + 'px;background:' + n.c + ';--r:' + (n.r || 0) + 'deg;z-index:' + (n.pin ? 900 : (n.z || 1)) + '"><div class="pi-bar"><button type="button" class="pi-b" data-pi="pin" title="Épingler (toujours au-dessus)" aria-label="Épingler"><svg viewBox="0 0 24 24" width="14" height="14" fill="' + (n.pin ? 'currentColor' : 'none') + '" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M9 3h6l-1 6 3 3H7l3-3-1-6zM12 12v8"/></svg></button><button type="button" class="pi-b" data-pi="col" title="Changer de couleur" aria-label="Couleur"><i style="background:' + n.c + '"></i></button><label class="pi-date' + (n.date ? ' set' : '') + '" title="Associer une date">' + (n.date ? bdFmt(n.date, { day: 'numeric', month: 'short' }) + (n.date < today ? ' ·' : '') : 'date') + '<input type="date" value="' + esc(n.date || '') + '" data-pi="date"></label><span class="pi-grip" title="Déplacer"></span><button type="button" class="pi-b x" data-pi="del" title="Supprimer" aria-label="Supprimer">×</button></div><textarea data-pi="txt" rows="4" placeholder="Écris ici…" spellcheck="false">' + esc(n.text || '') + '</textarea></div>').join('');
 }
 function bdNoteAdd() {
-  const c = BD_COLORS[BD.notes.length % BD_COLORS.length], n = { id: bdId(), text: '', c, x: 0.04 + Math.random() * 0.62, y: 0.06 + Math.random() * 0.35, r: Math.round((Math.random() * 4 - 2) * 10) / 10, date: '', pin: false, z: ++bdZ };
+  const v = $('#view-bureau'), pg = v.querySelector('.page'), W = pg.clientWidth, top = v.scrollTop + 90;
+  const c = BD_COLORS[BD.notes.length % BD_COLORS.length], n = { id: bdId(), text: '', c, x: Math.max(0.02, Math.min(0.8, (W * 0.5 - 95 + (Math.random() * 160 - 80)) / W)), y: Math.round(top + Math.random() * 60), r: Math.round((Math.random() * 4 - 2) * 10) / 10, date: '', pin: false, z: ++bdZ };
   BD.notes.push(n); bdAskRW(); bdSave(); renderBoard(); const t = $('#bd-board .pi[data-id="' + n.id + '"] textarea'); if (t) t.focus();
 }
 function bdBoardBind() {
-  const b = $('#bd-board'); let drag = null;
+  const b = $('#bd-board'), v = $('#view-bureau'); let drag = null, edge = null;
+  const scrollLoop = () => { if (!drag) return; const dy = drag.vy; if (dy) { v.scrollTop += dy; moveTo(drag.lx, drag.ly); } edge = requestAnimationFrame(scrollLoop); };
+  const moveTo = (cx, cy) => { const { pi, n } = drag, r = b.getBoundingClientRect(), w = pi.offsetWidth, h = pi.offsetHeight;
+    const x = Math.max(0, Math.min(r.width - w, cx - r.left - drag.dx)), y = Math.max(0, Math.min(r.height - h, cy - r.top - drag.dy)); n.x = x / r.width; n.y = y; pi.style.left = (n.x * 100) + '%'; pi.style.top = Math.round(y) + 'px'; };
   b.addEventListener('pointerdown', e => {
     const pi = e.target.closest('.pi'); if (!pi) return; const n = BD.notes.find(x => x.id === pi.dataset.id); if (!n) return;
     n.z = ++bdZ; if (!n.pin) pi.style.zIndex = n.z;
     if (e.target.closest('textarea,button,label,input')) return;
-    const r = b.getBoundingClientRect(), pr = pi.getBoundingClientRect(); drag = { n, pi, dx: e.clientX - pr.left, dy: e.clientY - pr.top, r }; pi.classList.add('drag'); pi.setPointerCapture(e.pointerId); e.preventDefault();
+    const pr = pi.getBoundingClientRect(); drag = { n, pi, dx: e.clientX - pr.left, dy: e.clientY - pr.top, vy: 0, lx: e.clientX, ly: e.clientY }; pi.classList.add('drag'); pi.setPointerCapture(e.pointerId); e.preventDefault(); edge = requestAnimationFrame(scrollLoop);
   });
-  b.addEventListener('pointermove', e => { if (!drag) return; const { r, pi, n } = drag, w = pi.offsetWidth, h = pi.offsetHeight;
-    const x = Math.max(0, Math.min(r.width - w, e.clientX - r.left - drag.dx)), y = Math.max(0, Math.min(r.height - h, e.clientY - r.top - drag.dy)); n.x = x / r.width; n.y = y / r.height; pi.style.left = (n.x * 100) + '%'; pi.style.top = (n.y * 100) + '%'; });
-  const end = () => { if (!drag) return; drag.pi.classList.remove('drag'); drag = null; bdSave(); }; b.addEventListener('pointerup', end); b.addEventListener('pointercancel', end);
+  b.addEventListener('pointermove', e => { if (!drag) return; drag.lx = e.clientX; drag.ly = e.clientY; const vr = v.getBoundingClientRect(); drag.vy = e.clientY > vr.bottom - 50 ? 14 : e.clientY < vr.top + 60 ? -14 : 0; moveTo(e.clientX, e.clientY); });
+  const end = () => { if (!drag) return; cancelAnimationFrame(edge); drag.pi.classList.remove('drag'); drag = null; bdSave(); }; b.addEventListener('pointerup', end); b.addEventListener('pointercancel', end);
   b.addEventListener('input', e => { const t = e.target.closest('[data-pi="txt"]'); if (!t) return; const n = BD.notes.find(x => x.id === t.closest('.pi').dataset.id); if (n) { n.text = t.value; bdSave(); } });
   b.addEventListener('change', e => { const t = e.target.closest('[data-pi="date"]'); if (!t) return; const n = BD.notes.find(x => x.id === t.closest('.pi').dataset.id); if (n) { n.date = t.value; bdSave(); renderBoard(); renderCalendar(); } });
   b.addEventListener('click', e => { const bt = e.target.closest('[data-pi]'); if (!bt || bt.tagName === 'TEXTAREA' || bt.tagName === 'INPUT') return; const pi = bt.closest('.pi'), n = BD.notes.find(x => x.id === pi.dataset.id); if (!n) return;
@@ -4681,10 +4805,10 @@ function renderTargets() {
 }
 
 
-/* ---------- iNaturalist : espèces vues autour d'une ville, que tu n'as pas encore dans ton Pokédex ---------- */
+/* ---------- iNaturalist : espèces vues autour d'une ville, jauge de proximité et carte intégrée ---------- */
 const INAT_KEY = 'enc_inat_v1', INAT_TAX = [['', 'Tous les groupes'], ['Aves', 'Oiseaux'], ['Mammalia', 'Mammifères'], ['Reptilia', 'Reptiles'], ['Amphibia', 'Amphibiens'], ['Insecta', 'Insectes'], ['Arachnida', 'Arachnides'], ['Plantae', 'Plantes'], ['Fungi', 'Champignons']];
 let inatCache = {}; try { inatCache = JSON.parse(localStorage.getItem(INAT_KEY) || '{}') || {}; } catch (_) { inatCache = {}; }
-let inatMore = 12, inatT = null;
+let inatMore = 12, inatT = null, inatMap = null, inatCircle = null, inatPts = null, inatSel = null, inatMapT = null, inatPtsCache = new Map(), inatPtsSeq = 0, inatKey = '';
 async function inatGet(c, o) {
   const m = o.next ? (new Date().getMonth() + 1) % 12 + 1 : new Date().getMonth() + 1;
   const q = 'lat=' + c.lat + '&lng=' + c.lon + '&radius=' + o.radius + '&month=' + m + '&quality_grade=research&locale=fr&per_page=60' + (o.taxon ? '&iconic_taxa=' + o.taxon : ''), hit = inatCache[q];
@@ -4692,46 +4816,89 @@ async function inatGet(c, o) {
   try {
     const r = await fetch('https://api.inaturalist.org/v1/observations/species_counts?' + q); if (!r.ok) throw new Error('HTTP ' + r.status);
     const d = (await r.json()).results.map(x => ({ id: x.taxon.id, sci: x.taxon.name, fr: x.taxon.preferred_common_name || '', n: x.count, ph: x.taxon.default_photo ? x.taxon.default_photo.square_url : '', g: x.taxon.iconic_taxon_name || '' }));
-    inatCache[q] = { t: Date.now(), d }; try { localStorage.setItem(INAT_KEY, JSON.stringify(inatCache)); } catch (_) { /* rien */ } return d;
+    inatCache[q] = { t: Date.now(), d }; const ks = Object.keys(inatCache); if (ks.length > 40) delete inatCache[ks[0]];
+    try { localStorage.setItem(INAT_KEY, JSON.stringify(inatCache)); } catch (_) { /* rien */ } return d;
   } catch (e) { if (hit) { hit.d._old = hit.t; return hit.d; } throw e; }
 }
-async function renderInat() {
-  const box = $('#bd-inat'); if (!box || !BD || !S.data) return; const c = BD.cities[bdSel], o = BD.inat, sel = (v, cur) => v === cur ? ' selected' : '';
-  const head = '<div class="out-top"><div><strong>À découvrir autour de toi</strong><span class="bd-sub"> · observations de la communauté iNaturalist' + (c ? ' autour de ' + esc(c.name) : '') + '</span></div></div>' +
-    '<div class="in-ctl"><label>Rayon<select data-in="radius">' + [10, 25, 50].map(r => '<option value="' + r + '"' + sel(r, +o.radius) + '>' + r + ' km</option>').join('') + '</select></label>' +
-    '<label>Période<select data-in="next"><option value=""' + sel('', o.next ? 'n' : '') + '>Ce mois-ci</option><option value="1"' + (o.next ? ' selected' : '') + '>Mois prochain</option></select></label>' +
-    '<label>Groupe<select data-in="taxon">' + INAT_TAX.map(t => '<option value="' + t[0] + '"' + sel(t[0], o.taxon || '') + '>' + t[1] + '</option>').join('') + '</select></label>' +
-    '<label class="chk"><input type="checkbox" data-in="all"' + (o.all ? ' checked' : '') + '> Montrer aussi celles que j\'ai déjà</label></div>';
-  if (!c) { box.innerHTML = head + '<div class="bd-empty sm">Ajoute d\'abord une ville dans la météo : iNaturalist cherchera autour d\'elle.</div>'; return; }
-  box.innerHTML = head + '<div class="in-list"><div class="bd-note">Chargement…</div></div>';
+function inatShell() {
+  const box = $('#bd-inat'); if (!box || box.dataset.built) return; box.dataset.built = '1'; const o = BD.inat;
+  box.innerHTML = '<div class="out-top"><div><strong>À découvrir autour de toi</strong><span class="bd-sub" id="in-sub"></span></div></div>' +
+    '<div class="in-ctl"><label class="in-gauge"><span>Proximité : <b id="in-km"></b></span><input type="range" id="in-range" data-in="radius" min="1" max="100" step="1" value="' + (+o.radius || 25) + '" aria-label="Rayon de recherche en kilomètres"><span class="in-ticks"><i>1 km</i><i>25</i><i>50</i><i>100 km</i></span></label>' +
+    '<label>Période<select data-in="next"><option value="">Ce mois-ci</option><option value="1">Mois prochain</option></select></label>' +
+    '<label>Groupe<select data-in="taxon">' + INAT_TAX.map(t => '<option value="' + t[0] + '">' + t[1] + '</option>').join('') + '</select></label>' +
+    '<label class="chk"><input type="checkbox" data-in="all"> Montrer aussi celles que j\'ai déjà</label></div>' +
+    '<div class="in-wrap"><div class="in-left"><div class="in-list" id="in-list"></div></div><div class="in-mapbox"><div class="in-maphead"><span id="in-maptitle">Clique une espèce pour voir où elle a été observée</span><a id="in-maplink" target="_blank" rel="noopener noreferrer" hidden>Voir sur iNaturalist ↗</a></div><div id="in-map" class="in-map"></div><div class="bd-note" id="in-mapnote"></div></div></div>';
+  inatBind();
+}
+function inatSync() {   /* remet les réglages dans les contrôles */
+  const o = BD.inat, b = $('#bd-inat'); if (!b) return;
+  b.querySelector('[data-in="next"]').value = o.next ? '1' : ''; b.querySelector('[data-in="taxon"]').value = o.taxon || ''; b.querySelector('[data-in="all"]').checked = !!o.all;
+  $('#in-range').value = +o.radius || 25; $('#in-km').textContent = (+o.radius || 25) + ' km';
+}
+function inatMapEnsure(c) {
+  if (typeof L === 'undefined' || !$('#in-map')) return;
+  if (!inatMap) {
+    inatMap = L.map('in-map', { minZoom: 3, maxZoom: 16, zoomSnap: 0.5 });
+    const tl = L.tileLayer(BASES[0].url, BASES[0].opt).addTo(inatMap); let ok = 0, er = 0; tl.on('tileload', () => { ok++; }); tl.on('tileerror', () => { er++; if (!ok && er === 4) $('#in-mapnote').textContent = 'Le fond de carte ne charge pas (pas de connexion ?).'; });
+    inatMap.setView([c.lat, c.lon], 9); inatPts = L.layerGroup().addTo(inatMap); inatMap.on('moveend', () => { clearTimeout(inatMapT); inatMapT = setTimeout(inatLoadPts, 550); });
+  }
+  const km = +BD.inat.radius || 25, key = c.lat + ',' + c.lon;
+  if (!inatCircle) inatCircle = L.circle([c.lat, c.lon], { radius: km * 1000, color: '#2f7f8f', weight: 1.5, dashArray: '5 5', fillColor: '#2f7f8f', fillOpacity: 0.07, interactive: false }).addTo(inatMap);
+  inatCircle.setLatLng([c.lat, c.lon]).setRadius(km * 1000);
+  if (inatKey !== key || !inatMap._loaded) { inatMap.fitBounds(inatCircle.getBounds(), { padding: [10, 10], animate: false }); inatKey = key; }
+}
+function inatFit() { if (!inatMap || !inatCircle) return; inatMap.fitBounds(inatCircle.getBounds(), { padding: [10, 10], animate: true }); }
+async function inatLoadPts() {
+  if (!inatMap || !inatSel || !inatPts) return; const b = inatMap.getBounds(), seq = ++inatPtsSeq, note = $('#in-mapnote');
+  const key = inatSel.id + '|' + [b.getSouth(), b.getWest(), b.getNorth(), b.getEast()].map(x => x.toFixed(2)).join(','), hit = inatPtsCache.get(key);
+  const draw = d => { if (seq !== inatPtsSeq) return; inatPts.clearLayers(); const m = new Date().getMonth() + 1;
+    d.rows.forEach(r => L.circleMarker([r[1], r[0]], { radius: 6, weight: 1, color: '#fff', fillColor: r[2] === m ? '#e8742f' : '#2f9aa8', fillOpacity: 0.72 }).addTo(inatPts));
+    note.textContent = d.rows.length ? d.rows.length + (d.total > d.rows.length ? ' observations affichées sur ' + d.total : ' observation' + (d.rows.length > 1 ? 's' : '')) + ' · orange : observées ce mois-ci. Les espèces sensibles sont floutées par iNaturalist.' : 'Aucune observation visible dans cette zone.'; };
+  if (hit && Date.now() - hit.t < 6e5) { draw(hit.d); return; }
+  note.textContent = 'Chargement des observations…';
   try {
-    const list = await inatGet(c, { radius: +o.radius || 25, next: !!o.next, taxon: o.taxon || '' }), mine = new Set(S.data.species.map(s => (s.sci || '').trim().toLowerCase()).filter(Boolean));
-    const shown = list.filter(x => o.all || !mine.has(x.sci.toLowerCase())), tiles = shown.slice(0, inatMore).map(x => { const has = mine.has(x.sci.toLowerCase());
-      return '<a class="in-t' + (has ? ' has' : '') + '" href="https://www.inaturalist.org/taxa/' + x.id + '" target="_blank" rel="noopener noreferrer" title="Ouvrir la fiche sur iNaturalist"><span class="in-p">' + (x.ph ? '<img loading="lazy" alt="" src="' + esc(x.ph) + '">' : '') + '</span><span class="in-b"><strong>' + esc(x.fr || x.sci) + '</strong><i>' + esc(x.sci) + '</i><small>' + x.n + ' obs.' + (has ? ' · déjà dans ton Pokédex' : '') + '</small></span></a>'; }).join('');
-    box.querySelector('.in-list').innerHTML = (tiles || '<div class="bd-empty sm">Rien de nouveau à signaler avec ces réglages.</div>') + (shown.length > inatMore ? '<button class="btn small in-more" type="button" data-in="more">Voir plus (' + (shown.length - inatMore) + ')</button>' : '') + (list._old ? '<div class="bd-note">Pas de connexion : données du ' + new Date(list._old).toLocaleString('fr-FR') + '.</div>' : '') + '<div class="bd-note">Source : iNaturalist (observations de qualité « recherche »). Photos © leurs auteurs. Seules les coordonnées arrondies de ta ville sont envoyées.</div>';
-  } catch (_) { box.querySelector('.in-list').innerHTML = '<div class="bd-note">iNaturalist est indisponible pour le moment (il faut une connexion internet).</div>'; }
+    const r = await fetch('https://api.inaturalist.org/v1/observations?taxon_id=' + inatSel.id + '&nelat=' + b.getNorth() + '&nelng=' + b.getEast() + '&swlat=' + b.getSouth() + '&swlng=' + b.getWest() + '&quality_grade=research&per_page=200&only_id=false&order_by=observed_on');
+    if (!r.ok) throw new Error('HTTP ' + r.status); const js = await r.json();
+    const d = { total: js.total_results || 0, rows: (js.results || []).filter(x => x.geojson && x.geojson.coordinates).map(x => [x.geojson.coordinates[0], x.geojson.coordinates[1], x.observed_on ? +x.observed_on.slice(5, 7) : 0]) };
+    inatPtsCache.set(key, { t: Date.now(), d }); draw(d);
+  } catch (_) { if (seq === inatPtsSeq) note.textContent = 'Observations indisponibles pour le moment (il faut une connexion internet).'; }
+}
+function inatPick(id) {
+  const t = $('#in-list [data-sp="' + id + '"]'); if (!t) return; inatSel = { id: +id, name: t.dataset.name, sci: t.dataset.sci };
+  $$('#in-list .in-t').forEach(x => x.classList.toggle('sel', x === t)); $('#in-maptitle').textContent = 'Observations : ' + inatSel.name; const a = $('#in-maplink'); a.href = 'https://www.inaturalist.org/taxa/' + id; a.hidden = false;
+  if (inatMap) inatMap.invalidateSize(); inatLoadPts();
+}
+async function renderInat() {
+  const box = $('#bd-inat'); if (!box || !BD || !S.data) return; inatShell(); inatSync();
+  const c = BD.cities[bdSel], o = BD.inat, list = $('#in-list'); $('#in-sub').textContent = ' · observations de la communauté iNaturalist' + (c ? ' autour de ' + c.name : '');
+  if (!c) { list.innerHTML = '<div class="bd-empty sm">Ajoute d\'abord une ville dans la météo : iNaturalist cherchera autour d\'elle.</div>'; return; }
+  inatMapEnsure(c); list.innerHTML = '<div class="bd-note">Chargement…</div>';
+  try {
+    const res = await inatGet(c, { radius: +o.radius || 25, next: !!o.next, taxon: o.taxon || '' }), mine = new Set(S.data.species.map(s => (s.sci || '').trim().toLowerCase()).filter(Boolean));
+    const shown = res.filter(x => o.all || !mine.has(x.sci.toLowerCase())), tiles = shown.slice(0, inatMore).map(x => { const has = mine.has(x.sci.toLowerCase());
+      return '<button type="button" class="in-t' + (has ? ' has' : '') + (inatSel && inatSel.id === x.id ? ' sel' : '') + '" data-in="sp" data-sp="' + x.id + '" data-name="' + esc(x.fr || x.sci) + '" data-sci="' + esc(x.sci) + '" title="Voir où elle a été observée"><span class="in-p">' + (x.ph ? '<img loading="lazy" alt="" src="' + esc(x.ph) + '">' : '') + '</span><span class="in-b"><strong>' + esc(x.fr || x.sci) + '</strong><i>' + esc(x.sci) + '</i><small>' + x.n + ' obs.' + (has ? ' · déjà dans ton Pokédex' : '') + '</small></span></button>'; }).join('');
+    list.innerHTML = (tiles || '<div class="bd-empty sm">Rien de nouveau à signaler avec ces réglages.</div>') + (shown.length > inatMore ? '<button class="btn small in-more" type="button" data-in="more">Voir plus (' + (shown.length - inatMore) + ')</button>' : '') + (res._old ? '<div class="bd-note">Pas de connexion : données du ' + new Date(res._old).toLocaleString('fr-FR') + '.</div>' : '') + '<div class="bd-note">Source : iNaturalist (observations de qualité « recherche »). Photos © leurs auteurs. Seules les coordonnées arrondies de ta ville et la zone visible de la carte sont envoyées.</div>';
+  } catch (_) { list.innerHTML = '<div class="bd-note">iNaturalist est indisponible pour le moment (il faut une connexion internet).</div>'; }
 }
 function inatBind() {
   const b = $('#bd-inat'); if (!b) return;
+  b.addEventListener('input', e => { if (e.target.dataset.in !== 'radius') return; const km = +e.target.value; $('#in-km').textContent = km + ' km'; if (inatCircle) inatCircle.setRadius(km * 1000); });
   b.addEventListener('change', e => { const k = e.target.dataset.in; if (!k) return; const o = BD.inat;
-    if (k === 'radius') o.radius = +e.target.value; else if (k === 'next') o.next = !!e.target.value; else if (k === 'taxon') o.taxon = e.target.value; else if (k === 'all') o.all = e.target.checked; inatMore = 12; bdSave(); renderInat(); });
-  b.addEventListener('click', e => { if (e.target.closest('[data-in="more"]')) { inatMore += 12; renderInat(); } });
+    if (k === 'radius') { o.radius = +e.target.value; inatFit(); } else if (k === 'next') o.next = !!e.target.value; else if (k === 'taxon') o.taxon = e.target.value; else if (k === 'all') o.all = e.target.checked; inatMore = 12; bdSave(); renderInat(); });
+  b.addEventListener('click', e => { if (e.target.closest('[data-in="more"]')) { inatMore += 12; renderInat(); return; } const t = e.target.closest('[data-in="sp"]'); if (t) inatPick(t.dataset.sp); });
 }
-
 /* ---------- page ---------- */
 function bdGreeting() { const h = new Date().getHours(); return h < 5 ? 'Bonne nuit' : h < 12 ? 'Bonjour' : h < 18 ? 'Bon après-midi' : 'Bonsoir'; }
 function renderBureau() {
   if (!BD || !S.data) return; const v = $('#view-bureau'); if (!v) return;
   if (!v.dataset.built) {
     v.dataset.built = '1';
-    v.querySelector('.page').innerHTML = '<div class="bd-top"><div><h2 id="bd-hello"></h2><p id="bd-date"></p></div><div id="bd-store" class="bd-store"></div></div>' +
-      '<div class="bd-grid"><section class="bd-card span8" style="--i:0"><div class="bd-h"><h3>Météo</h3><span class="bd-sub">Open-Meteo · clique une ville pour le détail heure par heure</span></div><div class="wx-row" id="bd-wx"></div><div id="bd-wx-detail"></div></section>' +
-      '<section class="bd-card span4" style="--i:1"><div class="bd-h"><h3>Lumière du jour</h3></div><div id="bd-light"></div></section>' +
-      '<section class="bd-card span7" style="--i:2"><div class="bd-h"><h3>Calendrier</h3></div><div id="bd-cal"></div></section>' +
-      '<section class="bd-card span5" style="--i:3"><div id="bd-outs"></div></section>' +
-      '<section class="bd-card span12" style="--i:4"><div id="bd-inat"></div></section>' +
-      '<section class="bd-card span12 board-card" style="--i:4"><div class="bd-h"><h3>Post-it</h3><button class="btn small" type="button" data-bd="note-add">+ Post-it</button></div><div class="board" id="bd-board"></div></section>' +
-      '<section class="bd-card span12" style="--i:5"><div id="bd-targets"></div></section></div>';
+    v.querySelector('.page').innerHTML = '<div class="bd-top"><div><h2 id="bd-hello"></h2><p id="bd-date"></p></div><div class="bd-top-r"><button class="btn small" type="button" data-bd="note-add">+ Post-it</button><div id="bd-store" class="bd-store"></div></div></div>' +
+      '<div class="bd-main"><div class="bd-col"><section class="bd-card wxcard" id="bd-wxcard" style="--i:0"><div class="bd-h"><h3>Météo</h3><button type="button" class="bd-link" id="bd-wx-toggle" data-bd="wx-toggle" aria-expanded="false">Détails</button></div><div class="wx-row" id="bd-wx"></div><div id="bd-wx-detail"></div></section>' +
+      '<div class="bd-two"><section class="bd-card" style="--i:2"><div class="bd-h"><h3>Calendrier</h3></div><div id="bd-cal"></div></section><section class="bd-card" style="--i:3"><div id="bd-outs"></div></section></div></div>' +
+      '<div class="bd-col"><section class="bd-card" style="--i:1"><div class="bd-h"><h3>Lumière du jour</h3></div><div id="bd-light"></div></section><section class="bd-card" style="--i:4"><div id="bd-targets"></div></section></div></div>' +
+      '<div class="bd-grid" style="margin-top:16px"><section class="bd-card span12" style="--i:5"><div id="bd-inat"></div></section></div>' +
+      '<div class="board" id="bd-board"></div>';
     bdBoardBind(); inatBind();
   }
   $('#bd-hello').textContent = bdGreeting(); $('#bd-date').textContent = capFirst(new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }));
@@ -4743,6 +4910,8 @@ function bdBind() {
     const a = e.target.closest('[data-bd]'); if (!a) return; const k = a.dataset.bd;
     if (k === 'city-del') { e.stopPropagation(); const i = +a.dataset.i; BD.cities.splice(i, 1); bdSel = 0; bdSave(); renderWeather(); }
     else if (k === 'city-sel') { bdSel = +a.dataset.i; bdWxDay = 0; v.querySelectorAll('.wx-card').forEach((c, i) => c.classList.toggle('on', i === bdSel)); renderWxDetail(); renderLight(); clearTimeout(inatT); inatT = setTimeout(renderInat, 400); }
+    else if (k === 'wx-open') { BD.ui.wxOpen = true; bdSel = +a.dataset.i; bdWxDay = 0; bdSave(); renderWeather(); }
+    else if (k === 'wx-toggle') { BD.ui.wxOpen = !BD.ui.wxOpen; bdSave(); renderWeather(); }
     else if (k === 'city-add') cityForm();
     else if (k === 'wx-day') { bdWxDay = +a.dataset.i; renderWxDetail(); }
     else if (k === 'cal-prev') { bdMonth.m--; if (bdMonth.m < 0) { bdMonth.m = 11; bdMonth.y--; } renderCalendar(); }
@@ -4775,7 +4944,7 @@ document.addEventListener('DOMContentLoaded', bdBoot); if (document.readyState !
 
 
 /* ---------- application installable + mise à jour de l'interface (seulement quand la page vient d'un site, pas d'un fichier) ---------- */
-const ENC_VERSION = '2026-11-26.1';
+const ENC_VERSION = '2026-11-26.2';
 function encPwa() {
   const v = $('#fm-ver'); if (v) v.textContent = 'Version ' + (/^__/.test(ENC_VERSION) ? 'de test' : ENC_VERSION);
   if (!('serviceWorker' in navigator) || !/^https?:$/.test(location.protocol)) return;
@@ -4789,6 +4958,34 @@ function encPwa() {
     document.addEventListener('visibilitychange', () => { if (!document.hidden) chk(); }); setInterval(chk, 1800000);
   }).catch(() => { /* pas de service worker : l'appli marche quand même */ });
 }
+
+/* ---------- cadre d'application, barre du haut qui apparaît au survol, tiroir des onglets ---------- */
+const encIsApp = () => { try { return matchMedia('(display-mode: standalone), (display-mode: window-controls-overlay), (display-mode: fullscreen), (display-mode: minimal-ui)').matches || /[?&]pwa=1/.test(location.search); } catch (_) { return false; } };
+function encThemeColor() {   /* la couleur de la barre de titre de la fenêtre suit la couleur du thème (version sombre) */
+  try {
+    const el = document.createElement('i'); el.style.cssText = 'position:fixed;width:0;height:0;background:var(--frame)'; document.body.appendChild(el);
+    const c = (getComputedStyle(el).backgroundColor.match(/[\d.]+/g) || [14, 30, 35]).slice(0, 3).map(x => Math.round(+x)); el.remove();
+    const hex = '#' + c.map(x => x.toString(16).padStart(2, '0')).join(''), m = document.querySelector('meta[name="theme-color"]'); if (m) m.setAttribute('content', hex);
+  } catch (_) { /* rien */ }
+}
+function encShell() {
+  const app = encIsApp(), b = document.body; b.classList.toggle('pwa', app);
+  try { const w = navigator.windowControlsOverlay; if (w) { const f = () => b.classList.toggle('wco', !!w.visible); f(); w.addEventListener('geometrychange', f); } } catch (_) { /* rien */ }
+  const mo = new MutationObserver(() => encThemeColor()); mo.observe(document.documentElement, { attributes: true, attributeFilter: ['style', 'data-theme'] }); encThemeColor();
+  /* barre du haut : cachée, elle apparaît quand la souris touche le bord haut de la fenêtre */
+  let hideT = null; const show = on => { clearTimeout(hideT); if (on) b.classList.add('hdr'); else hideT = setTimeout(() => b.classList.remove('hdr'), 700); };
+  document.addEventListener('mousemove', e => { if (!b.classList.contains('pwa')) return; if (e.clientY <= 12) show(true); else if (e.clientY > 64) show(false); else if (b.classList.contains('hdr')) show(true); }, { passive: true });
+  document.addEventListener('mouseleave', () => show(false));
+  /* tiroir des onglets (trois barres) */
+  const nav = v => { b.classList.toggle('nav-open', v); const bt = $('#burger'); if (bt) bt.setAttribute('aria-expanded', String(v)); };
+  const bt = $('#burger'); if (bt) bt.addEventListener('click', () => nav(!b.classList.contains('nav-open')));
+  const sc = $('#nav-scrim'); if (sc) sc.addEventListener('click', () => nav(false));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && b.classList.contains('nav-open')) nav(false); });
+  $$('#drawer button').forEach(x => x.addEventListener('click', () => setTimeout(() => nav(false), 120)));
+}
+let encShellBound = false; const encShellBoot = () => { if (encShellBound) return; encShellBound = true; encShell(); };
+document.addEventListener('DOMContentLoaded', encShellBoot); if (document.readyState !== 'loading') encShellBoot();
+
 let encPwaBound = false; const encPwaBoot = () => { if (encPwaBound) return; encPwaBound = true; encPwa(); };
 document.addEventListener('DOMContentLoaded', encPwaBoot); if (document.readyState !== 'loading') encPwaBoot();
 

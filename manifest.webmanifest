@@ -5,8 +5,12 @@
  "start_url": "./",
  "scope": "./",
  "display": "standalone",
- "background_color": "#13313a",
- "theme_color": "#13313a",
+ "display_override": [
+  "window-controls-overlay",
+  "standalone"
+ ],
+ "background_color": "#0e1e23",
+ "theme_color": "#0e1e23",
  "lang": "fr",
  "icons": [
   {
