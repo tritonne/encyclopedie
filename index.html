@@ -1932,6 +1932,51 @@ body.pwa .leaflet-top.leaflet-left{margin-top:0}
 /* carte iNaturalist : nom de la ville */
 .in-city-tip{background:#173b45;color:#fff;border:none;border-radius:8px;font-weight:700;font-size:.8rem;padding:2px 8px;box-shadow:0 2px 8px rgba(0,0,0,.3)}
 .in-city-tip::before{border-top-color:#173b45!important}
+
+/* ================= RETOUCHES 4 ================= */
+body.pwa header.top{display:none!important}
+.bd-lay{display:flex;flex-direction:column;gap:16px}
+.mzone{display:flex;flex-direction:column;gap:16px;border-radius:18px}
+.mcols{display:flex;gap:16px;align-items:flex-start}
+.mcol{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:16px;min-height:30px}
+.mod{margin:0!important;width:100%;display:block!important;position:relative}
+.bd-lay.settled .mod{animation:none}
+.dnd .mzone{min-height:58px;outline:2px dashed color-mix(in srgb,var(--teal) 45%,transparent);outline-offset:-2px}
+.dnd .mcol{min-height:140px;outline:1px dashed var(--line);outline-offset:6px}
+.mod.dragging{z-index:1200;pointer-events:none;box-shadow:0 24px 50px -12px rgba(0,0,0,.45);transform:rotate(1.2deg) scale(1.01);opacity:.96;animation:none!important;transition:none}
+.mod-ph{border-radius:18px;border:2px dashed color-mix(in srgb,var(--teal) 55%,transparent);background:color-mix(in srgb,var(--teal) 8%,transparent);min-height:50px}
+.mod.dropped{animation:modDrop .35s var(--ease-pop)}
+@keyframes modDrop{0%{transform:scale(1.02)}100%{transform:none}}
+.mod-bar{display:flex;align-items:center;gap:4px;margin:-6px -8px 8px -8px;min-height:30px}
+.mod-bar h3{font-size:1.02rem;font-weight:650;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-left:2px}
+.mod-grip,.mod-b{flex:none;width:28px;height:28px;border-radius:9px;display:grid;place-items:center;color:var(--ink2);background:none;border:none;padding:0;cursor:pointer;opacity:.5;transition:opacity .2s,background-color .2s}
+.mod-grip{cursor:grab;touch-action:none}.mod-grip:active{cursor:grabbing}
+.mod-grip:hover,.mod-b:hover{opacity:1;background:var(--tint)}
+.mod-b[data-mod-act=wide]{opacity:0}.mod:hover .mod-b[data-mod-act=wide]{opacity:.5}.mod .mod-b[data-mod-act=wide]:hover{opacity:1}
+.mod-b.chev svg{transition:transform .3s var(--ease-pop)}.mod.collapsed .mod-b.chev svg{transform:rotate(-90deg)}
+.mod.collapsed .mod-bar{margin-bottom:-6px}
+.mod-body{display:grid;grid-template-rows:1fr;transition:grid-template-rows .36s var(--ease-pop)}
+.mod.collapsed .mod-body{grid-template-rows:0fr}
+.mod-in{min-height:0;min-width:0}
+.mod.anim .mod-in,.mod.collapsed .mod-in{overflow:hidden}
+.mod.collapsed .mod-in{visibility:hidden;transition:visibility 0s .36s}
+/* météo : seulement les pastilles, sans encadré */
+.mod.bare{background:none;border:none;padding:0;border-radius:0;box-shadow:none}
+.mod.bare .mod-bar{position:absolute;right:0;top:-15px;margin:0;z-index:4;opacity:0;background:var(--paper);border:1px solid var(--line);border-radius:11px;padding:1px 3px;transition:opacity .2s}
+.mod.bare:hover .mod-bar,.mod.bare .mod-bar:focus-within{opacity:1}
+.mod.bare .mod-bar h3{display:none}
+.mod.bare.collapsed .mod-bar{position:static;opacity:1;width:max-content;max-width:100%;margin:0}
+.mod.bare.collapsed .mod-bar h3{display:block;padding:0 8px}
+.mod.bare .wx-row{padding:6px 2px 4px}
+.wx-row.compact{flex-wrap:wrap;overflow:visible}
+.mod.bare .wx-mini{background:var(--paper)}
+.wx-tg{display:flex;justify-content:flex-end}
+.out-top.end{justify-content:flex-end}
+/* cibles : étoiles de quête */
+.tg-q{flex:none}.tg-n small .cur{color:var(--ink);font-weight:700}
+.mod[data-mod=inat]{container-type:inline-size}
+@container (max-width:820px){.in-wrap{grid-template-columns:minmax(0,1fr)}.in-map{height:340px}.in-mapbox{position:static}.in-left .in-list{max-height:380px}}
+.tg .tg-q{margin-top:0}
 </style>
 </head>
 <body>
@@ -4677,8 +4722,8 @@ function wxIcon(code, day, sz) {
   return '<svg class="wxi" viewBox="0 0 48 48" width="' + (sz || 44) + '" height="' + (sz || 44) + '" aria-hidden="true">' + g + '</svg>';
 }
 async function renderWeather() {
-  const box = $('#bd-wx'); if (!box || !BD) return; const open = !!(BD.ui && BD.ui.wxOpen), card = $('#bd-wxcard'); if (card) card.classList.toggle('open', open);
-  const tg = $('#bd-wx-toggle'); if (tg) { tg.hidden = !BD.cities.length; tg.textContent = open ? 'Réduire' : 'Détails'; tg.setAttribute('aria-expanded', String(open)); }
+  const box = $('#bd-wx'); if (!box || !BD) return; const open = !!(BD.ui && BD.ui.wxOpen), card = $('#bd-wxcard'); if (card) { card.classList.toggle('open', open); card.classList.toggle('bare', !open); }
+  const tg = $('#bd-wx-toggle'); if (tg) { tg.hidden = !BD.cities.length || !open; tg.textContent = 'Réduire'; tg.setAttribute('aria-expanded', String(open)); }
   if (!BD.cities.length) { box.innerHTML = '<div class="bd-empty">Ajoute une ville pour voir la météo.<br><button class="btn small" data-bd="city-add" type="button">+ Ajouter une ville</button></div>'; $('#bd-wx-detail').innerHTML = ''; renderLight(); renderInat(); return; }
   if (bdSel >= BD.cities.length) bdSel = 0;
   const add = '<button class="wx-add" type="button" data-bd="city-add" aria-label="Ajouter une ville" title="Ajouter une ville"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>';
@@ -4764,7 +4809,7 @@ function renderOutings() {
   const row = o => { const dd = o.date ? bdDays(o.date) : null, when = dd === 0 ? 'Aujourd\'hui' : dd === 1 ? 'Demain' : dd > 1 ? 'Dans ' + dd + ' j' : o.done ? 'Terminée' : 'Passée';
     const sp = (o.species || []).map(id => S.data && S.data.species.find(s => s.id === id)).filter(Boolean).slice(0, 4).map(s => '<span class="chip">' + esc(s.fr) + '</span>').join('');
     return '<button type="button" class="out" data-bd="out-edit" data-id="' + o.id + '"><span class="out-d"><b>' + (o.date ? bdFmt(o.date, { day: 'numeric' }) : '–') + '</b><small>' + (o.date ? bdFmt(o.date, { month: 'short' }) : '') + '</small></span><span class="out-b"><strong>' + esc(o.title || 'Sortie') + '</strong><span>' + [o.time, o.place].filter(Boolean).map(esc).join(' · ') + '</span>' + (sp ? '<span class="out-sp">' + sp + '</span>' : '') + '</span><span class="out-w' + (dd === 0 || dd === 1 ? ' soon' : '') + '">' + when + '</span></button>'; };
-  box.innerHTML = '<div class="out-top"><strong>Prochaines sorties</strong><button class="btn small" type="button" data-bd="out-new">+ Nouvelle sortie</button></div>' + (up.length ? up.slice(0, 6).map(row).join('') : '<div class="bd-empty sm">Aucune sortie prévue. Clique sur un jour du calendrier ou sur « Nouvelle sortie ».</div>') + (past.length ? '<div class="out-sub">Passées</div>' + past.map(row).join('') : '');
+  box.innerHTML = '<div class="out-top end"><button class="btn small" type="button" data-bd="out-new">+ Nouvelle sortie</button></div>' + (up.length ? up.slice(0, 6).map(row).join('') : '<div class="bd-empty sm">Aucune sortie prévue. Clique sur un jour du calendrier ou sur « Nouvelle sortie ».</div>') + (past.length ? '<div class="out-sub">Passées</div>' + past.map(row).join('') : '');
 }
 function bdModal(html, onReady) {
   const m = $('#bd-modal'); m.innerHTML = '<div class="bd-sheet" role="dialog" aria-modal="true">' + html + '</div>'; m.hidden = false; requestAnimationFrame(() => m.classList.add('on'));
@@ -4824,7 +4869,8 @@ function renderTargets() {
   const box = $('#bd-targets'); if (!box || !S.data) return; const cm = new Date().getMonth() + 1;
   const list = S.data.species.filter(s => s.stepsDone < 3).map(s => { const mo = new Array(13).fill(0); s.obs.forEach(o => { if (o.month) mo[o.month]++; }); return { s, mo, now: mo[cm] > 0 }; })
     .sort((a, b) => (b.now - a.now) || (a.s.stepsDone - b.s.stepsDone) || (a.s.obs.length - b.s.obs.length)).slice(0, 6);
-  box.innerHTML = '<div class="out-top"><strong>À compléter</strong><span class="bd-sub">quête incomplète · les mois où tu les as déjà vues</span></div>' + (list.length ? list.map(({ s, mo }) => '<button type="button" class="tg" data-action="open-species" data-id="' + esc(s.id) + '"><span class="tg-n"><strong>' + esc(s.fr) + '</strong><small>' + s.stepsDone + '/3' + (s.group ? ' · ' + esc(s.group) : '') + '</small></span><span class="tg-m" title="Mois d\'observation">' + [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(k => '<i class="' + (mo[k] ? 'on' : '') + (k === cm ? ' cur' : '') + '"></i>').join('') + '</span></button>').join('') : '<div class="bd-empty sm">Toutes tes espèces ont leur quête terminée, bravo.</div>');
+  const mois = mo => { const k = []; for (let i = 1; i <= 12; i++) if (mo[i]) k.push('<span' + (i === cm ? ' class="cur"' : '') + '>' + ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'][i - 1] + '</span>'); return k.length ? 'Vue en ' + k.join(', ') : 'Pas encore observée'; };
+  box.innerHTML = '<div class="out-top"><span class="bd-sub">étapes de quête à terminer</span></div>' + (list.length ? list.map(({ s, mo }) => '<button type="button" class="tg" data-action="open-species" data-id="' + esc(s.id) + '"><span class="tg-n"><strong>' + esc(s.fr) + '</strong><small>' + (s.group ? esc(s.group) + ' · ' : '') + mois(mo) + '</small></span><span class="quest tg-q" title="Quête : ' + s.stepsDone + ' étape(s) sur 3"><span class="qs">' + s.steps.map(t => starSvg(t.ok)).join('') + '</span></span></button>').join('') : '<div class="bd-empty sm">Toutes tes espèces ont leur quête terminée, bravo.</div>');
 }
 
 
@@ -4846,7 +4892,7 @@ async function inatGet(c, o) {
 }
 function inatShell() {
   const box = $('#bd-inat'); if (!box || box.dataset.built) return; box.dataset.built = '1'; const o = BD.inat;
-  box.innerHTML = '<div class="out-top"><div><strong>À découvrir autour de toi</strong><span class="bd-sub" id="in-sub"></span></div></div>' +
+  box.innerHTML = '<div class="out-top"><span class="bd-sub" id="in-sub"></span></div>' +
     '<div class="in-ctl"><label class="in-gauge"><span>Proximité : <b id="in-km"></b></span><input type="range" id="in-range" data-in="radius" min="1" max="100" step="1" value="' + (+o.radius || 25) + '" aria-label="Rayon de recherche en kilomètres"><span class="in-ticks"><i>1 km</i><i>25</i><i>50</i><i>100 km</i></span></label>' +
     '<label>Ville<select data-in="city" id="in-city"></select></label><label>Période<select data-in="per"><option value="cur">Ce mois-ci</option><option value="next">Mois prochain</option><option value="3">3 prochains mois</option><option value="6">6 prochains mois</option><option value="12">Toute l\'année</option></select></label>' +
     '<label>Groupe<select data-in="taxon">' + INAT_TAX.map(t => '<option value="' + t[0] + '">' + t[1] + '</option>').join('') + '</select></label>' +
@@ -4915,19 +4961,87 @@ function inatBind() {
 }
 /* ---------- page ---------- */
 function bdGreeting() { const h = new Date().getHours(); return h < 5 ? 'Bonne nuit' : h < 12 ? 'Bonjour' : h < 18 ? 'Bon après-midi' : 'Bonsoir'; }
+/* modules du Bureau : déplaçables (poignée), réductibles (chevron), pleine largeur (flèches) */
+const BD_MODS = [
+  { id: 'wx', t: 'Météo', h: '<div class="wx-row" id="bd-wx"></div><div id="bd-wx-detail"></div><div class="wx-tg"><button type="button" class="bd-link" id="bd-wx-toggle" data-bd="wx-toggle" aria-expanded="false" hidden>Réduire</button></div>', bare: 1, hh: 90 },
+  { id: 'cal', t: 'Calendrier', h: '<div id="bd-cal"></div>', hh: 400 },
+  { id: 'light', t: 'Lumière du jour', h: '<div id="bd-light"></div>', hh: 260 },
+  { id: 'outs', t: 'Prochaines sorties', h: '<div id="bd-outs"></div>', hh: 340 },
+  { id: 'targets', t: 'À compléter', h: '<div id="bd-targets"></div>', hh: 320 },
+  { id: 'inat', t: 'À découvrir autour de toi', h: '<div id="bd-inat"></div>', hh: 1100 }
+];
+const bdMods = {}; let bdColN = 0;
+const IC_GRIP = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><circle cx="9" cy="6" r="1.7"/><circle cx="15" cy="6" r="1.7"/><circle cx="9" cy="12" r="1.7"/><circle cx="15" cy="12" r="1.7"/><circle cx="9" cy="18" r="1.7"/><circle cx="15" cy="18" r="1.7"/></svg>';
+const IC_CHEV = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+const IC_WIDE = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M8 8l-4 4 4 4M16 8l4 4-4 4"/></svg>';
+function bdModBuild() {
+  const lay = $('#bd-lay'); lay.innerHTML = '<div class="mzone" data-z="top"></div><div class="mcols"></div><div class="mzone" data-z="bot"></div>';
+  BD_MODS.forEach((m, i) => {
+    const el = document.createElement('section'); el.className = 'bd-card mod' + (m.bare ? ' bare' : '') + (m.id === 'wx' ? '' : ''); el.dataset.mod = m.id; el.style.setProperty('--i', i); if (m.id === 'wx') el.id = 'bd-wxcard';
+    el.innerHTML = '<div class="mod-bar"><span class="mod-grip" title="Glisser pour déplacer ce bloc" aria-label="Déplacer : ' + m.t + '">' + IC_GRIP + '</span><h3>' + m.t + '</h3><button type="button" class="mod-b" data-mod-act="wide" title="Pleine largeur / colonne" aria-label="Pleine largeur">' + IC_WIDE + '</button><button type="button" class="mod-b chev" data-mod-act="col" title="Réduire / déplier" aria-label="Réduire ou déplier" aria-expanded="true">' + IC_CHEV + '</button></div><div class="mod-body"><div class="mod-in">' + m.h + '</div></div>';
+    bdMods[m.id] = el; if (BD.ui.col && BD.ui.col[m.id]) { el.classList.add('collapsed'); el.querySelector('.chev').setAttribute('aria-expanded', 'false'); }
+  });
+  bdModArrange(true);
+  setTimeout(() => lay.classList.add('settled'), 1100);
+}
+function bdModArrange(force) {
+  const lay = $('#bd-lay'); if (!lay || !BD) return; const W = lay.clientWidth || 1200, n = Math.max(1, Math.min(4, Math.floor((W + 16) / 446)));
+  if (!force && n === bdColN) return; bdColN = n;
+  const ids = BD_MODS.map(m => m.id), L = BD.ui.lay || {}, H = {}; BD_MODS.forEach(m => H[m.id] = m.hh);
+  const top = (L.top || []).filter(x => ids.includes(x)), bot = (L.bot || (L.cols ? [] : ['inat'])).filter(x => ids.includes(x) && !top.includes(x));
+  let cols = (L.cols || []).map(c => c.filter(x => ids.includes(x) && !top.includes(x) && !bot.includes(x)));
+  const used = new Set([].concat(top, bot, ...cols)), rest = ids.filter(x => !used.has(x));
+  if (cols.length !== n) { const flat = []; const mx = Math.max(0, ...cols.map(c => c.length)); for (let r = 0; r < mx; r++) cols.forEach(c => { if (c[r]) flat.push(c[r]); }); cols = Array.from({ length: n }, () => []); flat.concat(rest).forEach(id => { let k = 0, best = 1e9; cols.forEach((c, i) => { const h = c.reduce((a, x) => a + H[x] + 16, 0); if (h < best) { best = h; k = i; } }); cols[k].push(id); }); }
+  else rest.forEach(id => { let k = 0, best = 1e9; cols.forEach((c, i) => { const h = c.reduce((a, x) => a + H[x] + 16, 0); if (h < best) { best = h; k = i; } }); cols[k].push(id); });
+  const zt = lay.querySelector('[data-z="top"]'), zb = lay.querySelector('[data-z="bot"]'), cc = lay.querySelector('.mcols');
+  cc.innerHTML = ''; cols.forEach(c => { const d = document.createElement('div'); d.className = 'mcol'; c.forEach(id => d.appendChild(bdMods[id])); cc.appendChild(d); });
+  top.forEach(id => zt.appendChild(bdMods[id])); bot.forEach(id => zb.appendChild(bdMods[id]));
+  if (inatMap) setTimeout(() => inatMap.invalidateSize(), 60);
+}
+function bdLayRead() {
+  const lay = $('#bd-lay'), ids = el => Array.from(el.children).filter(x => x.classList.contains('mod')).map(x => x.dataset.mod);
+  BD.ui.lay = { top: ids(lay.querySelector('[data-z="top"]')), bot: ids(lay.querySelector('[data-z="bot"]')), cols: Array.from(lay.querySelectorAll('.mcol')).map(ids) }; bdSave();
+}
+function bdModBind() {
+  const lay = $('#bd-lay'), v = $('#view-bureau'); let d = null, raf = 0;
+  new ResizeObserver(() => bdModArrange(false)).observe(lay);
+  lay.addEventListener('click', e => {
+    const b = e.target.closest('[data-mod-act]'); if (!b) return; const el = b.closest('.mod'), id = el.dataset.mod;
+    if (b.dataset.modAct === 'col') {
+      const c = el.classList.toggle('collapsed'); b.setAttribute('aria-expanded', String(!c)); (BD.ui.col || (BD.ui.col = {}))[id] = c; bdSave();
+      el.classList.add('anim'); clearTimeout(el._t); el._t = setTimeout(() => { el.classList.remove('anim'); if (id === 'inat' && inatMap) inatMap.invalidateSize(); }, 420);
+    } else {
+      const inZone = !!el.parentNode.dataset.z; if (inZone) { const cols = Array.from(lay.querySelectorAll('.mcol')); let k = cols[0], best = 1e9; cols.forEach(c => { const h = c.offsetHeight; if (h < best) { best = h; k = c; } }); k.appendChild(el); } else lay.querySelector('[data-z="bot"]').appendChild(el);
+      bdLayRead(); if (inatMap) setTimeout(() => inatMap.invalidateSize(), 80);
+    }
+  });
+  const flip = fn => { const els = Array.from(lay.querySelectorAll('.mod:not(.dragging)')), old = els.map(x => x.getBoundingClientRect()); fn(); els.forEach((x, i) => { const r = x.getBoundingClientRect(), dx = old[i].left - r.left, dy = old[i].top - r.top; if (!dx && !dy) return; x.style.transition = 'none'; x.style.transform = 'translate(' + dx + 'px,' + dy + 'px)'; requestAnimationFrame(() => { x.style.transition = 'transform .28s var(--ease-pop)'; x.style.transform = ''; setTimeout(() => { x.style.transition = ''; }, 320); }); }); };
+  const place = () => {
+    if (!d || !d.on) return; const { x, y } = d; d.el.style.left = (x - d.ox) + 'px'; d.el.style.top = (y - d.oy) + 'px';
+    const vr = v.getBoundingClientRect(); let tgt = null;
+    ['top', 'bot'].forEach(z => { const zr = lay.querySelector('[data-z="' + z + '"]'), r = zr.getBoundingClientRect(); if (!tgt && y >= r.top - 18 && y <= r.bottom + 18 && r.height > 0) tgt = zr; });
+    if (!tgt) { let best = 1e9; lay.querySelectorAll('.mcol').forEach(c => { const r = c.getBoundingClientRect(), dx = x < r.left ? r.left - x : x > r.right ? x - r.right : 0; if (dx < best) { best = dx; tgt = c; } }); }
+    const sibs = Array.from(tgt.children).filter(k => k.classList.contains('mod') && k !== d.el); let ref = null;
+    for (const k of sibs) { const r = k.getBoundingClientRect(); if (y < r.top + r.height / 2) { ref = k; break; } }
+    d.ph.style.height = (tgt.dataset.z ? 58 : d.h) + 'px'; if (d.ph.parentNode !== tgt || d.ph.nextSibling !== ref) flip(() => tgt.insertBefore(d.ph, ref));
+    const sp = y < vr.top + 70 ? -16 : y > vr.bottom - 70 ? 16 : 0; if (sp) v.scrollTop += sp;
+  };
+  const loop = () => { if (!d) return; place(); raf = requestAnimationFrame(loop); };
+  lay.addEventListener('pointerdown', e => { const g = e.target.closest('.mod-grip'); if (!g || e.button) return; const el = g.closest('.mod'), r = el.getBoundingClientRect(); d = { el, ox: e.clientX - r.left, oy: e.clientY - r.top, x: e.clientX, y: e.clientY, sx: e.clientX, sy: e.clientY, w: r.width, h: r.height, on: false, g, ph: document.createElement('div') }; try { g.setPointerCapture(e.pointerId); } catch (_) { /* rien */ } e.preventDefault(); });
+  lay.addEventListener('pointermove', e => {
+    if (!d) return; d.x = e.clientX; d.y = e.clientY;
+    if (!d.on && Math.hypot(d.x - d.sx, d.y - d.sy) > 5) { d.on = true; d.ph.className = 'mod-ph'; d.ph.style.height = d.h + 'px'; d.el.parentNode.insertBefore(d.ph, d.el); d.el.classList.add('dragging'); d.el.style.cssText = 'position:fixed;left:' + (d.x - d.ox) + 'px;top:' + (d.y - d.oy) + 'px;width:' + d.w + 'px'; lay.classList.add('dnd'); raf = requestAnimationFrame(loop); }
+  });
+  const end = () => { if (!d) return; const k = d; d = null; cancelAnimationFrame(raf); if (!k.on) return; k.el.style.cssText = ''; k.el.classList.remove('dragging'); k.ph.replaceWith(k.el); lay.classList.remove('dnd'); k.el.classList.add('dropped'); setTimeout(() => k.el.classList.remove('dropped'), 400); bdLayRead(); if (inatMap) setTimeout(() => inatMap.invalidateSize(), 80); };
+  lay.addEventListener('pointerup', end); lay.addEventListener('pointercancel', end);
+}
 function renderBureau() {
   if (!BD || !S.data) return; const v = $('#view-bureau'); if (!v) return;
   if (!v.dataset.built) {
     v.dataset.built = '1';
     v.querySelector('.page').innerHTML = '<div class="bd-top"><div><h2 id="bd-hello"></h2><p id="bd-date"></p></div><div class="bd-top-r"><button class="btn small" type="button" data-bd="note-add">+ Post-it</button><div id="bd-store" class="bd-store"></div></div></div>' +
-      '<div class="bd-masonry"><section class="bd-card wxcard" id="bd-wxcard" style="--i:0"><div class="bd-h"><h3>Météo</h3><button type="button" class="bd-link" id="bd-wx-toggle" data-bd="wx-toggle" aria-expanded="false">Détails</button></div><div class="wx-row" id="bd-wx"></div><div id="bd-wx-detail"></div></section>' +
-      '<section class="bd-card" style="--i:1"><div class="bd-h"><h3>Calendrier</h3></div><div id="bd-cal"></div></section>' +
-      '<section class="bd-card" style="--i:2"><div class="bd-h"><h3>Lumière du jour</h3></div><div id="bd-light"></div></section>' +
-      '<section class="bd-card" style="--i:3"><div id="bd-outs"></div></section>' +
-      '<section class="bd-card" style="--i:4"><div id="bd-targets"></div></section></div>' +
-      '<div class="bd-grid" style="margin-top:16px"><section class="bd-card span12" style="--i:5"><div id="bd-inat"></div></section></div>' +
-      '<div class="board" id="bd-board"></div>';
-    bdBoardBind(); inatBind();
+      '<div class="bd-lay" id="bd-lay"></div><div class="board" id="bd-board"></div>';
+    bdModBuild(); bdModBind(); bdBoardBind(); inatBind();
   }
   $('#bd-hello').textContent = bdGreeting(); $('#bd-date').textContent = capFirst(new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }));
   bdStoreChip(); renderCalendar(); renderOutings(); renderBoard(); renderTargets(); renderWeather();
@@ -4972,7 +5086,7 @@ document.addEventListener('DOMContentLoaded', bdBoot); if (document.readyState !
 
 
 /* ---------- application installable + mise à jour de l'interface (seulement quand la page vient d'un site, pas d'un fichier) ---------- */
-const ENC_VERSION = '2026-11-26.3';
+const ENC_VERSION = '2026-11-26.4';
 function encPwa() {
   const v = $('#fm-ver'); if (v) v.textContent = 'Version ' + (/^__/.test(ENC_VERSION) ? 'de test' : ENC_VERSION);
   if (!('serviceWorker' in navigator) || !/^https?:$/.test(location.protocol)) return;
