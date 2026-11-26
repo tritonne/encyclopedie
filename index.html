@@ -1978,11 +1978,38 @@ body.pwa .leaflet-top.leaflet-left{margin-top:0}
 .tg .tg-q{margin-top:0}
 
 /* ================= RETOUCHES 5 ================= */
-nav.tabs#drawer,#app nav.tabs.rail,nav.tabs#drawer.rail{top:120px!important;transform:none!important}
+nav.tabs#drawer,#app nav.tabs.rail,nav.tabs#drawer.rail{top:152px!important;transform:none!important}
 body.nav-open nav.tabs#drawer{transform:none!important}
 /* aucune barre de défilement visible (la molette et le tactile marchent toujours) */
 *{scrollbar-width:none!important}*:hover{scrollbar-width:none!important}
 ::-webkit-scrollbar{width:0!important;height:0!important;display:none!important}
+
+/* ================= RETOUCHES 6 ================= */
+/* barre Encyclopédie : toujours visible, dans le cadre */
+body.pwa header.top{position:relative;left:auto;right:auto;top:auto;transform:none;opacity:1;pointer-events:auto;height:46px;flex:none;border-radius:18px 18px 0 0;background:var(--frame)!important;backdrop-filter:none;-webkit-backdrop-filter:none}
+body.pwa .burger{display:none}
+/* modules libres */
+.bd-lay{position:relative;display:block;min-height:260px}
+.mod{position:absolute!important;display:flex!important;flex-direction:column;margin:0!important;width:auto}
+.mod-body{flex:1 1 auto;min-height:0}
+.mod-in{overflow:auto}
+.mod.dragging{transform:none;opacity:.97;box-shadow:0 26px 50px -14px rgba(0,0,0,.5);transition:none;animation:none!important;cursor:grabbing}
+.mod.anim{transition:height .34s var(--ease-pop)}
+.mod.anim .mod-in{overflow:hidden}
+.mod-bar{cursor:pointer;flex:none}
+.mod-bar h3{user-select:none}
+.mod-bar:hover h3{color:var(--teal)}
+.mod-rs{position:absolute;z-index:6;display:block}
+.rs-e{right:-6px;top:18px;bottom:18px;width:12px;cursor:ew-resize}
+.rs-s{bottom:-6px;left:18px;right:18px;height:12px;cursor:ns-resize}
+.rs-se{right:-6px;bottom:-6px;width:22px;height:22px;cursor:nwse-resize}
+.rs-se::after{content:"";position:absolute;right:9px;bottom:9px;width:9px;height:9px;border-right:2px solid var(--ink2);border-bottom:2px solid var(--ink2);border-radius:0 0 4px 0;opacity:0;transition:opacity .2s}
+.mod:hover .rs-se::after{opacity:.5}
+.mod.collapsed .rs-s,.mod.collapsed .rs-se{display:none}
+.mod.bare:not(.collapsed) .rs-se::after{display:none}
+.mod.bare .mod-bar{cursor:default}
+.mod.bare.collapsed .mod-bar{cursor:pointer}
+.in-mapbox{top:0}
 </style>
 </head>
 <body>
@@ -2024,7 +2051,7 @@ body.nav-open nav.tabs#drawer{transform:none!important}
       <button role="tab" data-view="bureau" aria-selected="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-6 8 6v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg><span>Bureau</span></button>
       <button role="tab" data-view="carte" aria-selected="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4L3 6.5v13L9 17l6 3 6-2.500v-13L15 7zM9 4v13M15 7v13"/></svg><span>Carte</span></button>
       <button role="tab" data-view="especes" aria-selected="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-4.500-7-10a4 4 0 0 1 7-2.600A4 4 0 0 1 19 11c0 5.500-7 10-7 10z"/></svg><span>Espèces</span></button>
-      <button role="tab" data-view="arbre" aria-selected="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M12 8l-5 4M12 12l5-4M12 16l-4 3M12 16l4 3"/></svg><span>Arbre</span></button>
+      <button role="tab" data-view="arbre" aria-selected="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v6M12 9c0 3-3 4-5 7l-1 4M12 9c0 3 3 4 5 7l1 4M12 9v12M9.300 13.800L5 13M14.700 13.800L19 13"/></svg><span>Arbre</span></button>
   </nav>
   <div id="hstatus" class="statchip" aria-live="polite"></div>
   <button class="avatar fab" id="fab" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Menu : couleurs, mode sombre, contrôles" title="Menu (glisse pour me déplacer)"><span class="fab-badge" id="fab-badge" hidden></span></button>
@@ -4752,7 +4779,7 @@ async function renderWeather() {
     } catch (_) { const t = el.querySelector('.wx-temp,.wm-now'); if (t) t.textContent = '×'; el.title = 'Météo indisponible (pas de connexion ?)'; }
   }));
   if (open) renderWxDetail(); else { const dt = $('#bd-wx-detail'); if (dt) dt.innerHTML = ''; }
-  renderLight(); renderInat();
+  renderLight(); renderInat(); bdAuto();
 }
 function renderWxDetail() {
   const box = $('#bd-wx-detail'); if (!box || !BD) return; const c = BD.cities[bdSel]; if (!c || !c._d) { box.innerHTML = c ? '<div class="bd-note">Météo indisponible pour le moment. Il faut une connexion internet.</div>' : ''; return; }
@@ -4968,88 +4995,96 @@ function inatBind() {
 }
 /* ---------- page ---------- */
 function bdGreeting() { const h = new Date().getHours(); return h < 5 ? 'Bonne nuit' : h < 12 ? 'Bonjour' : h < 18 ? 'Bon après-midi' : 'Bonsoir'; }
-/* modules du Bureau : déplaçables (poignée), réductibles (chevron), pleine largeur (flèches) */
+/* modules du Bureau : posés où tu veux (glisser la barre du titre), taille réglable (bords et coin), clic sur le titre = plier / déplier */
 const BD_MODS = [
-  { id: 'wx', t: 'Météo', h: '<div class="wx-row" id="bd-wx"></div><div id="bd-wx-detail"></div><div class="wx-tg"><button type="button" class="bd-link" id="bd-wx-toggle" data-bd="wx-toggle" aria-expanded="false" hidden>Réduire</button></div>', bare: 1, hh: 90 },
-  { id: 'cal', t: 'Calendrier', h: '<div id="bd-cal"></div>', hh: 400 },
-  { id: 'light', t: 'Lumière du jour', h: '<div id="bd-light"></div>', hh: 260 },
-  { id: 'outs', t: 'Prochaines sorties', h: '<div id="bd-outs"></div>', hh: 340 },
-  { id: 'targets', t: 'À compléter', h: '<div id="bd-targets"></div>', hh: 320 },
-  { id: 'inat', t: 'À découvrir autour de toi', h: '<div id="bd-inat"></div>', hh: 1100 }
+  { id: 'wx', t: 'Météo', h: '<div class="wx-row" id="bd-wx"></div><div id="bd-wx-detail"></div><div class="wx-tg"><button type="button" class="bd-link" id="bd-wx-toggle" data-bd="wx-toggle" aria-expanded="false" hidden>Réduire</button></div>', bare: 1 },
+  { id: 'cal', t: 'Calendrier', h: '<div id="bd-cal"></div>' },
+  { id: 'light', t: 'Lumière du jour', h: '<div id="bd-light"></div>' },
+  { id: 'outs', t: 'Prochaines sorties', h: '<div id="bd-outs"></div>' },
+  { id: 'targets', t: 'À compléter', h: '<div id="bd-targets"></div>' },
+  { id: 'inat', t: 'À découvrir autour de toi', h: '<div id="bd-inat"></div>', wide: 1 }
 ];
-const bdMods = {}; let bdColN = 0;
+const bdMods = {}; let bdZ2 = 10, bdAutoT = 0, bdAutoPos = {};
+const MOD_MINW = 250, MOD_G = 16, modCollH = el => el.classList.contains('bare') ? 40 : 56, bdLayW = () => { const l = $('#bd-lay'); return (l && l.clientWidth) || 0; };
 const IC_GRIP = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><circle cx="9" cy="6" r="1.7"/><circle cx="15" cy="6" r="1.7"/><circle cx="9" cy="12" r="1.7"/><circle cx="15" cy="12" r="1.7"/><circle cx="9" cy="18" r="1.7"/><circle cx="15" cy="18" r="1.7"/></svg>';
 const IC_CHEV = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
-const IC_WIDE = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h16M8 8l-4 4 4 4M16 8l4 4-4 4"/></svg>';
 function bdModBuild() {
-  const lay = $('#bd-lay'); lay.innerHTML = '<div class="mzone" data-z="top"></div><div class="mcols"></div><div class="mzone" data-z="bot"></div>';
+  const lay = $('#bd-lay'); lay.innerHTML = '';
   BD_MODS.forEach((m, i) => {
-    const el = document.createElement('section'); el.className = 'bd-card mod' + (m.bare ? ' bare' : '') + (m.id === 'wx' ? '' : ''); el.dataset.mod = m.id; el.style.setProperty('--i', i); if (m.id === 'wx') el.id = 'bd-wxcard';
-    el.innerHTML = '<div class="mod-bar"><span class="mod-grip" title="Glisser pour déplacer ce bloc" aria-label="Déplacer : ' + m.t + '">' + IC_GRIP + '</span><h3>' + m.t + '</h3><button type="button" class="mod-b" data-mod-act="wide" title="Pleine largeur / colonne" aria-label="Pleine largeur">' + IC_WIDE + '</button><button type="button" class="mod-b chev" data-mod-act="col" title="Réduire / déplier" aria-label="Réduire ou déplier" aria-expanded="true">' + IC_CHEV + '</button></div><div class="mod-body"><div class="mod-in">' + m.h + '</div></div>';
-    bdMods[m.id] = el; if (BD.ui.col && BD.ui.col[m.id]) { el.classList.add('collapsed'); el.querySelector('.chev').setAttribute('aria-expanded', 'false'); }
+    const el = document.createElement('section'); el.className = 'bd-card mod' + (m.bare ? ' bare' : ''); el.dataset.mod = m.id; el.style.setProperty('--i', i); if (m.id === 'wx') el.id = 'bd-wxcard';
+    el.innerHTML = '<div class="mod-bar"><span class="mod-grip" title="Glisser pour déplacer" aria-label="Déplacer : ' + m.t + '">' + IC_GRIP + '</span><h3 title="Clique pour plier ou déplier">' + m.t + '</h3><button type="button" class="mod-b chev" data-mod-act="col" title="Plier / déplier" aria-label="Plier ou déplier" aria-expanded="true">' + IC_CHEV + '</button></div><div class="mod-body"><div class="mod-in">' + m.h + '</div></div><i class="mod-rs rs-e" data-rs="e"></i><i class="mod-rs rs-s" data-rs="s" title="Double-clic : ajuster à la hauteur du contenu"></i><i class="mod-rs rs-se" data-rs="se" title="Taille (double-clic : ajuster au contenu)"></i>';
+    bdMods[m.id] = el; lay.appendChild(el); if (BD.ui.col && BD.ui.col[m.id]) { el.classList.add('collapsed'); el.querySelector('.chev').setAttribute('aria-expanded', 'false'); }
   });
-  bdModArrange(true);
   setTimeout(() => lay.classList.add('settled'), 1100);
 }
-function bdModArrange(force) {
-  const lay = $('#bd-lay'); if (!lay || !BD) return; const W = lay.clientWidth || 1200, n = Math.max(1, Math.min(4, Math.floor((W + 16) / 446)));
-  if (!force && n === bdColN) return; bdColN = n;
-  const ids = BD_MODS.map(m => m.id), L = BD.ui.lay || {}, H = {}; BD_MODS.forEach(m => H[m.id] = m.hh);
-  const top = (L.top || []).filter(x => ids.includes(x)), bot = (L.bot || (L.cols ? [] : ['inat'])).filter(x => ids.includes(x) && !top.includes(x));
-  let cols = (L.cols || []).map(c => c.filter(x => ids.includes(x) && !top.includes(x) && !bot.includes(x)));
-  const used = new Set([].concat(top, bot, ...cols)), rest = ids.filter(x => !used.has(x));
-  if (cols.length !== n) { const flat = []; const mx = Math.max(0, ...cols.map(c => c.length)); for (let r = 0; r < mx; r++) cols.forEach(c => { if (c[r]) flat.push(c[r]); }); cols = Array.from({ length: n }, () => []); flat.concat(rest).forEach(id => { let k = 0, best = 1e9; cols.forEach((c, i) => { const h = c.reduce((a, x) => a + H[x] + 16, 0); if (h < best) { best = h; k = i; } }); cols[k].push(id); }); }
-  else rest.forEach(id => { let k = 0, best = 1e9; cols.forEach((c, i) => { const h = c.reduce((a, x) => a + H[x] + 16, 0); if (h < best) { best = h; k = i; } }); cols[k].push(id); });
-  const zt = lay.querySelector('[data-z="top"]'), zb = lay.querySelector('[data-z="bot"]'), cc = lay.querySelector('.mcols');
-  cc.innerHTML = ''; cols.forEach(c => { const d = document.createElement('div'); d.className = 'mcol'; c.forEach(id => d.appendChild(bdMods[id])); cc.appendChild(d); });
-  top.forEach(id => zt.appendChild(bdMods[id])); bot.forEach(id => zb.appendChild(bdMods[id]));
-  if (inatMap) setTimeout(() => inatMap.invalidateSize(), 60);
+function bdModApply(el, p, W) {
+  const col = el.classList.contains('collapsed'), w = Math.max(MOD_MINW, Math.min(W, Math.round(p.w * W))), x = Math.max(0, Math.min(W - w, Math.round(p.x * W)));
+  el.style.left = x + 'px'; el.style.top = Math.round(p.y) + 'px'; el.style.width = w + 'px'; el.style.height = (col ? modCollH(el) : Math.round(p.h)) + 'px'; el.style.zIndex = p.z || 1;
 }
-function bdLayRead() {
-  const lay = $('#bd-lay'), ids = el => Array.from(el.children).filter(x => x.classList.contains('mod')).map(x => x.dataset.mod);
-  BD.ui.lay = { top: ids(lay.querySelector('[data-z="top"]')), bot: ids(lay.querySelector('[data-z="bot"]')), cols: Array.from(lay.querySelectorAll('.mcol')).map(ids) }; bdSave();
+function bdLayFit() { const lay = $('#bd-lay'); if (!lay) return; let m = 0; Object.values(bdMods).forEach(el => { m = Math.max(m, el.offsetTop + el.offsetHeight); }); lay.style.height = Math.max(260, m + 48) + 'px'; }
+function bdModApplyAll() {
+  const W = bdLayW(); if (!W) return; const pos = BD.ui.pos || bdAutoPos; let bottom = 0; Object.values(pos).forEach(p => { bottom = Math.max(bottom, p.y + (p.h || 0)); });
+  BD_MODS.forEach(m => { let p = pos[m.id]; if (!p) { p = pos[m.id] = { x: 0, y: bottom + MOD_G, w: m.wide ? 1 : 0.4, h: 320, z: 1 }; bottom += 336; } bdModApply(bdMods[m.id], p, W); });
+  bdLayFit();
+}
+function bdAuto(force) {   /* rangement de départ, tant que tu n'as rien déplacé : colonnes équilibrées, iNaturalist en pleine largeur en dessous */
+  clearTimeout(bdAutoT); bdAutoT = setTimeout(() => {
+    const lay = $('#bd-lay'); if (!lay || !BD || (BD.ui.pos && !force)) return; const W = lay.clientWidth; if (!W || !S.data) return;
+    if (force) BD.ui.pos = null;
+    const n = Math.max(1, Math.min(4, Math.floor((W + MOD_G) / 446))), cw = (W - (n - 1) * MOD_G) / n, colH = new Array(n).fill(0), auto = {};
+    const nat = (el, w) => { el.style.transition = 'none'; el.style.width = w + 'px'; el.style.height = 'auto'; const h = Math.ceil(el.offsetHeight) + 2; el.style.transition = ''; return h; };
+    BD_MODS.filter(m => !m.wide).forEach(m => { let k = 0; colH.forEach((h, i) => { if (h < colH[k]) k = i; }); const h = nat(bdMods[m.id], cw); auto[m.id] = { x: k * (cw + MOD_G) / W, y: colH[k], w: cw / W, h: bdMods[m.id].classList.contains('collapsed') ? 300 : h, z: 1 }; colH[k] += (bdMods[m.id].classList.contains('collapsed') ? modCollH(bdMods[m.id]) : h) + MOD_G; });
+    BD_MODS.filter(m => m.wide).forEach(m => { const y = Math.max(...colH); const h = Math.min(nat(bdMods[m.id], W), 1100); auto[m.id] = { x: 0, y, w: 1, h, z: 1 }; });
+    bdAutoPos = auto; bdModApplyAll(); if (inatMap) inatMap.invalidateSize();
+  }, 350);
+}
+function bdFreeze() {   /* à la première modification, on mémorise la disposition actuelle */
+  if (BD.ui.pos) return; const W = bdLayW() || 1; const o = {}; BD_MODS.forEach(m => { const p = bdAutoPos[m.id]; o[m.id] = p ? { x: p.x, y: p.y, w: p.w, h: p.h, z: p.z || 1 } : { x: 0, y: 0, w: .4, h: 320, z: 1 }; }); BD.ui.pos = o;
+}
+function bdAutoH(id) {   /* ajuste la hauteur du bloc à son contenu */
+  const el = bdMods[id]; if (!el || el.classList.contains('collapsed')) return; bdFreeze(); const p = BD.ui.pos[id]; el.style.transition = 'none'; el.style.height = 'auto'; p.h = Math.min(1400, Math.ceil(el.offsetHeight) + 2); el.style.height = p.h + 'px'; el.offsetHeight; el.style.transition = '';
+  bdLayFit(); bdSave(); if (id === 'inat' && inatMap) inatMap.invalidateSize();
+}
+function bdModToggle(el) {
+  const id = el.dataset.mod; bdFreeze(); const p = BD.ui.pos[id], c = !el.classList.contains('collapsed'), b = el.querySelector('.chev');
+  el.classList.add('anim'); (BD.ui.col || (BD.ui.col = {}))[id] = c; b.setAttribute('aria-expanded', String(!c));
+  if (c) { el.classList.add('collapsed'); el.style.height = modCollH(el) + 'px'; }
+  else { el.classList.remove('collapsed'); if (p.h < 100) { el.style.transition = 'none'; el.style.height = 'auto'; p.h = Math.ceil(el.offsetHeight) + 2; el.style.height = modCollH(el) + 'px'; el.offsetHeight; el.style.transition = ''; } el.style.height = p.h + 'px'; }
+  bdSave(); clearTimeout(el._t); el._t = setTimeout(() => { el.classList.remove('anim'); bdLayFit(); if (id === 'inat' && inatMap) inatMap.invalidateSize(); }, 420);
 }
 function bdModBind() {
-  const lay = $('#bd-lay'), v = $('#view-bureau'); let d = null, raf = 0;
-  new ResizeObserver(() => bdModArrange(false)).observe(lay);
-  lay.addEventListener('click', e => {
-    const b = e.target.closest('[data-mod-act]'); if (!b) return; const el = b.closest('.mod'), id = el.dataset.mod;
-    if (b.dataset.modAct === 'col') {
-      const c = el.classList.toggle('collapsed'); b.setAttribute('aria-expanded', String(!c)); (BD.ui.col || (BD.ui.col = {}))[id] = c; bdSave();
-      el.classList.add('anim'); clearTimeout(el._t); el._t = setTimeout(() => { el.classList.remove('anim'); if (id === 'inat' && inatMap) inatMap.invalidateSize(); }, 420);
-    } else {
-      const inZone = !!el.parentNode.dataset.z; if (inZone) { const cols = Array.from(lay.querySelectorAll('.mcol')); let k = cols[0], best = 1e9; cols.forEach(c => { const h = c.offsetHeight; if (h < best) { best = h; k = c; } }); k.appendChild(el); } else lay.querySelector('[data-z="bot"]').appendChild(el);
-      bdLayRead(); if (inatMap) setTimeout(() => inatMap.invalidateSize(), 80);
-    }
-  });
-  const flip = fn => { const els = Array.from(lay.querySelectorAll('.mod:not(.dragging)')), old = els.map(x => x.getBoundingClientRect()); fn(); els.forEach((x, i) => { const r = x.getBoundingClientRect(), dx = old[i].left - r.left, dy = old[i].top - r.top; if (!dx && !dy) return; x.style.transition = 'none'; x.style.transform = 'translate(' + dx + 'px,' + dy + 'px)'; requestAnimationFrame(() => { x.style.transition = 'transform .28s var(--ease-pop)'; x.style.transform = ''; setTimeout(() => { x.style.transition = ''; }, 320); }); }); };
-  const place = () => {
-    if (!d || !d.on) return; const { x, y } = d; d.el.style.left = (x - d.ox) + 'px'; d.el.style.top = (y - d.oy) + 'px';
-    const vr = v.getBoundingClientRect(); let tgt = null;
-    ['top', 'bot'].forEach(z => { const zr = lay.querySelector('[data-z="' + z + '"]'), r = zr.getBoundingClientRect(); if (!tgt && y >= r.top - 18 && y <= r.bottom + 18 && r.height > 0) tgt = zr; });
-    if (!tgt) { let best = 1e9; lay.querySelectorAll('.mcol').forEach(c => { const r = c.getBoundingClientRect(), dx = x < r.left ? r.left - x : x > r.right ? x - r.right : 0; if (dx < best) { best = dx; tgt = c; } }); }
-    const sibs = Array.from(tgt.children).filter(k => k.classList.contains('mod') && k !== d.el); let ref = null;
-    for (const k of sibs) { const r = k.getBoundingClientRect(); if (y < r.top + r.height / 2) { ref = k; break; } }
-    d.ph.style.height = (tgt.dataset.z ? 58 : d.h) + 'px'; if (d.ph.parentNode !== tgt || d.ph.nextSibling !== ref) flip(() => tgt.insertBefore(d.ph, ref));
-    const sp = y < vr.top + 70 ? -16 : y > vr.bottom - 70 ? 16 : 0; if (sp) v.scrollTop += sp;
+  const lay = $('#bd-lay'), v = $('#view-bureau'); let d = null, raf = 0, lastW = 0; const snap = n => Math.round(n / 8) * 8;
+  new ResizeObserver(() => { const W = lay.clientWidth; if (!W || W === lastW) return; lastW = W; if (BD.ui.pos) bdModApplyAll(); else bdAuto(); }).observe(lay);
+  lay.addEventListener('click', e => { const b = e.target.closest('[data-mod-act]'); if (b) bdModToggle(b.closest('.mod')); });
+  lay.addEventListener('dblclick', e => { const r = e.target.closest('.rs-s,.rs-se'); if (r) bdAutoH(r.closest('.mod').dataset.mod); });
+  const upd = () => {
+    if (!d || !d.on) return; const W = d.W, dx = d.cx - d.sx, dy = d.cy - d.sy + (v.scrollTop - d.vs), p = d.p, el = d.el;
+    if (d.kind === 'move') { const w = p.w * W; p.x = Math.max(0, Math.min(W - w, snap(d.x0 + dx))) / W; p.y = Math.max(0, snap(d.y0 + dy)); el.style.left = Math.round(p.x * W) + 'px'; el.style.top = Math.round(p.y) + 'px'; }
+    if (d.kind === 'e' || d.kind === 'se') { const w = Math.max(MOD_MINW, Math.min(W - d.x0, snap(d.w0 + dx))); p.w = w / W; el.style.width = w + 'px'; }
+    if (d.kind === 's' || d.kind === 'se') { p.h = Math.max(80, snap(d.h0 + dy)); el.style.height = p.h + 'px'; }
+    bdLayFit();
   };
-  const loop = () => { if (!d) return; place(); raf = requestAnimationFrame(loop); };
-  lay.addEventListener('pointerdown', e => { const g = e.target.closest('.mod-grip'); if (!g || e.button) return; const el = g.closest('.mod'), r = el.getBoundingClientRect(); d = { el, ox: e.clientX - r.left, oy: e.clientY - r.top, x: e.clientX, y: e.clientY, sx: e.clientX, sy: e.clientY, w: r.width, h: r.height, on: false, g, ph: document.createElement('div') }; try { g.setPointerCapture(e.pointerId); } catch (_) { /* rien */ } e.preventDefault(); });
-  lay.addEventListener('pointermove', e => {
-    if (!d) return; d.x = e.clientX; d.y = e.clientY;
-    if (!d.on && Math.hypot(d.x - d.sx, d.y - d.sy) > 5) { d.on = true; d.ph.className = 'mod-ph'; d.ph.style.height = d.h + 'px'; d.el.parentNode.insertBefore(d.ph, d.el); d.el.classList.add('dragging'); d.el.style.cssText = 'position:fixed;left:' + (d.x - d.ox) + 'px;top:' + (d.y - d.oy) + 'px;width:' + d.w + 'px'; lay.classList.add('dnd'); raf = requestAnimationFrame(loop); }
+  const loop = () => { if (!d) return; if (d.kind === 'move') { const vr = v.getBoundingClientRect(), y = d.cy; v.scrollTop += y < vr.top + 70 ? -14 : y > vr.bottom - 70 ? 14 : 0; } upd(); raf = requestAnimationFrame(loop); };
+  lay.addEventListener('pointerdown', e => {
+    if (e.button) return; const rs = e.target.closest('.mod-rs'), bar = e.target.closest('.mod-bar'); if (!rs && !bar) return; if (e.target.closest('.mod-b')) return;
+    const el = e.target.closest('.mod'); if (rs && el.classList.contains('collapsed') && rs.dataset.rs !== 'e') return;
+    bdFreeze(); const p = BD.ui.pos[el.dataset.mod], W = bdLayW(); p.z = ++bdZ2; el.style.zIndex = p.z;
+    d = { el, p, kind: rs ? rs.dataset.rs : 'move', sx: e.clientX, sy: e.clientY, cx: e.clientX, cy: e.clientY, x0: p.x * W, y0: p.y, w0: p.w * W, h0: p.h, W, vs: v.scrollTop, on: false, bar: !!bar };
+    try { lay.setPointerCapture(e.pointerId); } catch (_) { /* rien */ } e.preventDefault();
   });
-  const end = () => { if (!d) return; const k = d; d = null; cancelAnimationFrame(raf); if (!k.on) return; k.el.style.cssText = ''; k.el.classList.remove('dragging'); k.ph.replaceWith(k.el); lay.classList.remove('dnd'); k.el.classList.add('dropped'); setTimeout(() => k.el.classList.remove('dropped'), 400); bdLayRead(); if (inatMap) setTimeout(() => inatMap.invalidateSize(), 80); };
+  lay.addEventListener('pointermove', e => { if (!d) return; d.cx = e.clientX; d.cy = e.clientY; if (!d.on && Math.hypot(d.cx - d.sx, d.cy - d.sy) > 5) { d.on = true; d.el.classList.add('dragging'); raf = requestAnimationFrame(loop); } });
+  const end = () => { if (!d) return; const k = d; d = null; cancelAnimationFrame(raf); k.el.classList.remove('dragging'); if (!k.on) { if (k.bar && k.kind === 'move') bdModToggle(k.el); return; } bdLayFit(); bdSave(); if (inatMap) setTimeout(() => inatMap.invalidateSize(), 60); };
   lay.addEventListener('pointerup', end); lay.addEventListener('pointercancel', end);
 }
 function renderBureau() {
   if (!BD || !S.data) return; const v = $('#view-bureau'); if (!v) return;
   if (!v.dataset.built) {
     v.dataset.built = '1';
-    v.querySelector('.page').innerHTML = '<div class="bd-top"><div><h2 id="bd-hello"></h2><p id="bd-date"></p></div><div class="bd-top-r"><button class="btn small" type="button" data-bd="note-add">+ Post-it</button><div id="bd-store" class="bd-store"></div></div></div>' +
+    v.querySelector('.page').innerHTML = '<div class="bd-top"><div><h2 id="bd-hello"></h2><p id="bd-date"></p></div><div class="bd-top-r"><button class="btn small soft" type="button" data-bd="mod-reset" title="Remettre les blocs en place automatiquement">Ranger</button><button class="btn small" type="button" data-bd="note-add">+ Post-it</button><div id="bd-store" class="bd-store"></div></div></div>' +
       '<div class="bd-lay" id="bd-lay"></div><div class="board" id="bd-board"></div>';
     bdModBuild(); bdModBind(); bdBoardBind(); inatBind();
   }
+  if (BD.ui.pos) bdModApplyAll(); else bdAuto();
   $('#bd-hello').textContent = bdGreeting(); $('#bd-date').textContent = capFirst(new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }));
   bdStoreChip(); renderCalendar(); renderOutings(); renderBoard(); renderTargets(); renderWeather();
 }
@@ -5059,8 +5094,9 @@ function bdBind() {
     const a = e.target.closest('[data-bd]'); if (!a) return; const k = a.dataset.bd;
     if (k === 'city-del') { e.stopPropagation(); const i = +a.dataset.i; BD.cities.splice(i, 1); bdSel = 0; bdSave(); renderWeather(); }
     else if (k === 'city-sel') { bdSel = +a.dataset.i; bdWxDay = 0; v.querySelectorAll('.wx-card').forEach((c, i) => c.classList.toggle('on', i === bdSel)); renderWxDetail(); renderLight(); clearTimeout(inatT); inatT = setTimeout(renderInat, 400); }
-    else if (k === 'wx-open') { BD.ui.wxOpen = true; bdSel = +a.dataset.i; bdWxDay = 0; bdSave(); renderWeather(); }
-    else if (k === 'wx-toggle') { BD.ui.wxOpen = !BD.ui.wxOpen; bdSave(); renderWeather(); }
+    else if (k === 'wx-open') { BD.ui.wxOpen = true; bdSel = +a.dataset.i; bdWxDay = 0; bdSave(); renderWeather(); setTimeout(() => bdAutoH('wx'), 700); }
+    else if (k === 'wx-toggle') { BD.ui.wxOpen = !BD.ui.wxOpen; bdSave(); renderWeather(); setTimeout(() => bdAutoH('wx'), 700); }
+    else if (k === 'mod-reset') { BD.ui.pos = null; bdSave(); bdAuto(true); }
     else if (k === 'city-add') cityForm();
     else if (k === 'wx-day') { bdWxDay = +a.dataset.i; renderWxDetail(); }
     else if (k === 'cal-prev') { bdMonth.m--; if (bdMonth.m < 0) { bdMonth.m = 11; bdMonth.y--; } renderCalendar(); }
@@ -5093,7 +5129,7 @@ document.addEventListener('DOMContentLoaded', bdBoot); if (document.readyState !
 
 
 /* ---------- application installable + mise à jour de l'interface (seulement quand la page vient d'un site, pas d'un fichier) ---------- */
-const ENC_VERSION = '2026-11-26.5';
+const ENC_VERSION = '2026-11-26.6';
 function encPwa() {
   const v = $('#fm-ver'); if (v) v.textContent = 'Version ' + (/^__/.test(ENC_VERSION) ? 'de test' : ENC_VERSION);
   if (!('serviceWorker' in navigator) || !/^https?:$/.test(location.protocol)) return;
