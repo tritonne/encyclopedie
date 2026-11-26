@@ -1,5 +1,5 @@
 /* Service worker : l'interface se met à jour, les données restent dans ton dossier. */
-const V = '2026-11-26.4';
+const V = '2026-11-26.5';
 const CORE = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open('enc-' + V).then(c => c.addAll(CORE)).catch(() => {})); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== 'enc-' + V).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
