@@ -3474,6 +3474,7 @@ function cadStart() {
   bar.innerHTML = cadBtn('cad-move', 'move', 'Déplacer la photo', 'on') + cadBtn('cad-zoom', 'zoom', 'Zoomer autour du point cliqué (glisse vers la droite ou le haut pour agrandir, vers la gauche ou le bas pour réduire ; ou molette)') + '<i class="cad-sep"></i>' + cadBtn('cad-reset', 'reset', 'Revenir au cadrage automatique', 'small') + cadBtn('cad-ok', 'ok', 'Terminer et enregistrer', 'small ok');
   document.body.appendChild(bar); cad.bar = bar;
   { const r = cover.getBoundingClientRect(), iw = img.naturalWidth, ih = img.naturalHeight; if (iw && ih) { const k = Math.max(r.width / iw, r.height / ih); cad.g = { cw: r.width, ch: r.height, w: iw * k, h: ih * k }; } }
+  if (cad.g) { const st = img.style; st.inset = 'auto'; st.left = '0px'; st.top = '0px'; st.width = cad.g.w.toFixed(2) + 'px'; st.height = cad.g.h.toFixed(2) + 'px'; st.maxWidth = 'none'; st.objectFit = 'fill'; st.transformOrigin = '0 0'; }
   img.style.willChange = 'transform'; cadPlace(); cadShow();
 }
 function cadMode(m) { if (!cad) return; cad.mode = m; cad.cover.classList.toggle('mode-move', m === 'move'); cad.cover.classList.toggle('mode-zoom', m === 'zoom'); cad.bar.querySelector('[data-action=cad-move]').classList.toggle('on', m === 'move'); cad.bar.querySelector('[data-action=cad-zoom]').classList.toggle('on', m === 'zoom'); }
@@ -3489,8 +3490,8 @@ window.addEventListener('resize', () => cadPlace());
 function cadShow() {
   if (!cad) return; const g = cad.g, z = cad.pos[2] || 1, P = cad.pos[0] / 100, Q = cad.pos[1] / 100, st = cad.img.style;
   if (!g) { cadApply(cad.img, cad.pos); return; }
-  const tx = g.cw * P - P * g.w * z - z * (g.cw - g.w) / 2, ty = g.ch * Q - Q * g.h * z - z * (g.ch - g.h) / 2;
-  st.objectPosition = '50% 50%'; st.transformOrigin = '0 0'; st.transform = 'translate3d(' + tx.toFixed(2) + 'px,' + ty.toFixed(2) + 'px,0) scale(' + z.toFixed(4) + ')';
+  const tx = P * (g.cw - g.w * z), ty = Q * (g.ch - g.h * z);
+  st.transform = 'translate3d(' + tx.toFixed(2) + 'px,' + ty.toFixed(2) + 'px,0) scale(' + z.toFixed(4) + ')';
 }
 /* zoom autour d'un point pivot (qx, qy en pixels dans la vignette) : le point de la photo sous le pointeur ne bouge pas */
 function cadZoomAt(from, z2, qx, qy) {
@@ -3502,6 +3503,7 @@ function cadZoomAt(from, z2, qx, qy) {
 const cadText = () => Math.round(cad.pos[0]) + ' ' + Math.round(cad.pos[1]) + (cad.pos[2] > 1.01 ? ' ' + (Math.round(cad.pos[2] * 100) / 100) : '');
 function cadStop(save, reset) {
   if (!cad) return; const { cover, img, p } = cad; let txt = '';
+  { const st = img.style; st.inset = ''; st.left = ''; st.top = ''; st.width = ''; st.height = ''; st.maxWidth = ''; st.objectFit = ''; st.transformOrigin = ''; }
   if (reset) { cadSave(p.key, null); cadApply(img, p.cad); }
   else if (save) { txt = cadText(); cadSave(p.key, [Math.round(cad.pos[0]), Math.round(cad.pos[1]), Math.round(cad.pos[2] * 100) / 100]); }
   else cadApply(img, cadOf(p));
@@ -5220,7 +5222,7 @@ document.addEventListener('DOMContentLoaded', bdBoot); if (document.readyState !
 
 
 /* ---------- application installable + mise à jour de l'interface (seulement quand la page vient d'un site, pas d'un fichier) ---------- */
-const ENC_VERSION = '2026-11-26.9';
+const ENC_VERSION = '2026-11-26.10';
 function encPwa() {
   const v = $('#fm-ver'); if (v) v.textContent = 'Version ' + (/^__/.test(ENC_VERSION) ? 'de test' : ENC_VERSION);
   if (!('serviceWorker' in navigator) || !/^https?:$/.test(location.protocol)) return;
