@@ -2045,6 +2045,20 @@ body:has(.mod.dragging){user-select:none;-webkit-user-select:none}
 nav.tabs#drawer.moving{cursor:grabbing}
 nav.tabs#drawer.rail-l{align-items:flex-start!important}
 nav.tabs#drawer.rail-l button{flex-direction:row!important}
+
+/* ================= RETOUCHES 8 ================= */
+#app nav.tabs.rail,nav.tabs#drawer.rail,nav.tabs#drawer{flex-direction:row!important;align-items:center!important;top:62px!important;left:50%!important;right:auto!important;transform:translateX(-50%)!important;border-radius:999px!important;padding:5px 10px 5px 6px!important;gap:4px!important;width:auto!important}
+body.nav-open nav.tabs#drawer{transform:translateX(-50%)!important}
+nav.tabs#drawer button,nav.tabs#drawer:hover button,nav.tabs#drawer:focus-within button{flex-direction:row!important;width:auto!important;height:42px!important;padding:0 16px 0 12px!important;gap:8px!important;justify-content:center!important;border-radius:999px!important}
+nav.tabs#drawer button span,nav.tabs#drawer:hover button span{opacity:1!important}
+.rail-grip{flex:none;width:14px;height:21px;margin:0 2px 0 4px;align-self:center;border-radius:6px;cursor:grab;background:radial-gradient(circle,rgba(255,255,255,.55) 1.4px,transparent 1.9px) center/7px 7px repeat-y;opacity:.75}
+/* poignées : 3 points seulement */
+.pi-grip{background:none!important;position:relative}
+.pi-grip::before{content:"";position:absolute;left:50%;top:50%;width:21px;height:7px;margin:-3.500px 0 0 -10.500px;background:radial-gradient(circle,rgba(58,51,32,.55) 1.3px,transparent 1.7px) center/7px 7px repeat-x}
+/* accueil : le bouton clair/sombre passe à gauche, loin des boutons de fenêtre de Windows */
+#home .themebtn.wtheme,.themebtn.wtheme{right:auto!important;left:22px!important;top:22px!important}
+/* la barre d'onglets passe sous les fiches et le recadrage de photo (elle cachait le haut de la fiche) */
+#app nav.tabs.rail,nav.tabs#drawer.rail,nav.tabs#drawer{z-index:950!important}
 </style>
 </head>
 <body>
@@ -2086,8 +2100,8 @@ nav.tabs#drawer.rail-l button{flex-direction:row!important}
       <span class="rail-grip" id="rail-grip" title="Glisser pour déplacer les onglets"></span>
       <button role="tab" data-view="bureau" aria-selected="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-6 8 6v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg><span>Bureau</span></button>
       <button role="tab" data-view="carte" aria-selected="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4L3 6.5v13L9 17l6 3 6-2.500v-13L15 7zM9 4v13M15 7v13"/></svg><span>Carte</span></button>
-      <button role="tab" data-view="especes" aria-selected="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-4.500-7-10a4 4 0 0 1 7-2.600A4 4 0 0 1 19 11c0 5.500-7 10-7 10z"/></svg><span>Espèces</span></button>
-      <button role="tab" data-view="arbre" aria-selected="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v10M12 6.500L9 5M12 9.500c2 0 3.500-1 4.500-3M12 13c0 3-2 4.500-5 4.500M12 13c0 2.500 2.500 4.500 6 4.500 1.500 0 2.500-1 3-2.500"/></svg><span>Arbre</span></button>
+      <button role="tab" data-view="especes" aria-selected="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 12.500c-2.500 0-5 2.200-5 4.500 0 1.700 1.500 2.500 3 2.500.8 0 1.300-.3 2-.3s1.200.3 2 .3c1.500 0 3-.8 3-2.500 0-2.300-2.500-4.500-5-4.500z"/><circle cx="5.500" cy="10.500" r="1.600"/><circle cx="9.300" cy="6.300" r="1.600"/><circle cx="14.700" cy="6.300" r="1.600"/><circle cx="18.500" cy="10.500" r="1.600"/></svg><span>Espèces</span></button>
+      <button role="tab" data-view="arbre" aria-selected="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.900 2.400C9.900 6 10.100 9.500 10.400 12.900M9.800 6.200C8.600 6.700 7.600 6.900 7.100 7.600L7.100 10.400M10.400 13.100C13 13.400 15.400 13.800 17 15.300C18.200 16.500 18.900 18.500 19.100 21.300M11.300 13.800C11 16.400 10 17.200 8 17.800C6.600 18.200 6.200 19.400 6 21.400"/></svg><span>Arbre</span></button>
   </nav>
   <div id="hstatus" class="statchip" aria-live="polite"></div>
   <button class="avatar fab" id="fab" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Menu : couleurs, mode sombre, contrôles" title="Menu (glisse pour me déplacer)"><span class="fab-badge" id="fab-badge" hidden></span></button>
@@ -4207,7 +4221,7 @@ const FAB_KEY = 'enc_fab_v1';
 function closeFab() { const m = $('#fabmenu'); if (m.hidden) return; m.hidden = true; $('#fab').setAttribute('aria-expanded', 'false'); }
 function placeFab(x, y) {
   const f = $('#fab'), w = f.offsetWidth || 56, m = encIsApp() ? 30 : 16, mr = m + 8;
-  x = Math.max(m, Math.min(innerWidth - w - mr, x)); y = Math.max(m, Math.min(innerHeight - w - m, y));
+  x = Math.max(m, Math.min(innerWidth - w - mr, x)); y = Math.max(encIsApp() ? 48 : m, Math.min(innerHeight - w - m, y));
   f.style.left = x + 'px'; f.style.top = y + 'px'; f.style.right = 'auto'; f.style.bottom = 'auto'; S.fabPos = { x, y };
 }
 function placeMenu() {
@@ -5057,7 +5071,7 @@ const BD_MODS = [
 ];
 const bdMods = {}; let bdZ2 = 10, bdAutoT = 0, bdAutoPos = {};
 const MOD_MINW = 250, MOD_G = 16, modCollH = el => el.classList.contains('bare') ? 40 : 56, bdLayW = () => { const l = $('#bd-lay'); return (l && l.clientWidth) || 0; };
-const IC_GRIP = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><circle cx="9" cy="6" r="1.7"/><circle cx="15" cy="6" r="1.7"/><circle cx="9" cy="12" r="1.7"/><circle cx="15" cy="12" r="1.7"/><circle cx="9" cy="18" r="1.7"/><circle cx="15" cy="18" r="1.7"/></svg>';
+const IC_GRIP = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>';
 const IC_CHEV = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
 function bdModBuild() {
   const lay = $('#bd-lay'); lay.innerHTML = '';
@@ -5116,18 +5130,15 @@ function bdModMenu(el, btn) {
   const r = btn.getBoundingClientRect(); mm.hidden = false; mm.style.left = Math.max(8, Math.min(innerWidth - mm.offsetWidth - 8, r.right - mm.offsetWidth)) + 'px'; mm.style.top = Math.min(innerHeight - mm.offsetHeight - 8, r.bottom + 6) + 'px';
 }
 let encRailOn = false;
-function encRail() {   /* la pastille d'onglets se déplace comme la bille : on l'attrape par sa poignée */
-  const nav = $('#drawer'), g = $('#rail-grip'); if (!nav || !g || encRailOn) return; encRailOn = true; const K = 'enc_rail'; let st = null; try { st = JSON.parse(localStorage.getItem(K) || 'null'); } catch (_) { st = null; }
-  const put = (p, drag) => { const w = nav.offsetWidth || 58, h = nav.offsetHeight || 200; const y = Math.max(6, Math.min(innerHeight - h - 6, p.y));
-    nav.classList.toggle('rail-l', p.s === 'l'); const set = (k, v) => nav.style.setProperty(k, v, 'important');
-    set('top', y + 'px'); set('transform', 'none');
-    if (drag) { set('left', Math.max(6, Math.min(innerWidth - w - 6, p.x)) + 'px'); set('right', 'auto'); return; }
-    if (p.s === 'l') { set('left', Math.max(6, Math.min(innerWidth - w - 6, p.d)) + 'px'); set('right', 'auto'); } else { set('right', Math.max(6, Math.min(innerWidth - w - 6, p.d)) + 'px'); set('left', 'auto'); } };
-  if (st && st.y != null) put(st);
+function encRail() {   /* la barre d'onglets (horizontale) se déplace comme la bille : on l'attrape par sa poignée */
+  const nav = $('#drawer'), g = $('#rail-grip'); if (!nav || !g || encRailOn) return; encRailOn = true; const K = 'enc_rail2'; let st = null; try { st = JSON.parse(localStorage.getItem(K) || 'null'); } catch (_) { st = null; }
+  const put = p => { const w = nav.offsetWidth || 400, h = nav.offsetHeight || 54, set = (k, v) => nav.style.setProperty(k, v, 'important');
+    set('left', Math.max(6, Math.min(innerWidth - w - 6, p.x)) + 'px'); set('top', Math.max(6, Math.min(innerHeight - h - 6, p.y)) + 'px'); set('right', 'auto'); set('transform', 'none'); };
+  if (st && st.x != null) put(st);
   let d = null;
   g.addEventListener('pointerdown', e => { const r = nav.getBoundingClientRect(); d = { ox: e.clientX - r.left, oy: e.clientY - r.top }; g.setPointerCapture(e.pointerId); nav.classList.add('moving'); e.preventDefault(); });
-  g.addEventListener('pointermove', e => { if (d) put({ x: e.clientX - d.ox, y: e.clientY - d.oy, s: 'r' }, true); });
-  const end = () => { if (!d) return; d = null; nav.classList.remove('moving'); const r = nav.getBoundingClientRect(), left = r.left + r.width / 2 < innerWidth / 2; st = left ? { s: 'l', d: r.left, y: r.top } : { s: 'r', d: innerWidth - r.right, y: r.top }; try { localStorage.setItem(K, JSON.stringify(st)); } catch (_) { /* rien */ } put(st); };
+  g.addEventListener('pointermove', e => { if (d) put({ x: e.clientX - d.ox, y: e.clientY - d.oy }); });
+  const end = () => { if (!d) return; d = null; nav.classList.remove('moving'); const r = nav.getBoundingClientRect(); st = { x: r.left, y: r.top }; try { localStorage.setItem(K, JSON.stringify(st)); } catch (_) { /* rien */ } };
   g.addEventListener('pointerup', end); g.addEventListener('pointercancel', end);
   addEventListener('resize', () => { if (st) put(st); });
 }
@@ -5209,7 +5220,7 @@ document.addEventListener('DOMContentLoaded', bdBoot); if (document.readyState !
 
 
 /* ---------- application installable + mise à jour de l'interface (seulement quand la page vient d'un site, pas d'un fichier) ---------- */
-const ENC_VERSION = '2026-11-26.7';
+const ENC_VERSION = '2026-11-26.9';
 function encPwa() {
   const v = $('#fm-ver'); if (v) v.textContent = 'Version ' + (/^__/.test(ENC_VERSION) ? 'de test' : ENC_VERSION);
   if (!('serviceWorker' in navigator) || !/^https?:$/.test(location.protocol)) return;
