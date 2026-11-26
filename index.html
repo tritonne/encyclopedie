@@ -2010,6 +2010,41 @@ body.pwa .burger{display:none}
 .mod.bare .mod-bar{cursor:default}
 .mod.bare.collapsed .mod-bar{cursor:pointer}
 .in-mapbox{top:0}
+
+/* ================= RETOUCHES 7 ================= */
+.page.bureau{max-width:none!important}
+.bd-lay{margin-left:calc(-1 * clamp(14px,2.2vw,36px));margin-right:-84px}
+.board{z-index:500}
+.mod.dragging{transform:none;will-change:transform}
+body:has(.mod.dragging){user-select:none;-webkit-user-select:none}
+.mod-ren{flex:1;min-width:0;font:inherit;font-size:1.02rem;font-weight:650;color:var(--ink);background:var(--tint);border:1px solid var(--teal);border-radius:8px;padding:2px 8px;outline:none}
+.pm-pop{position:fixed;z-index:3000;background:var(--paper);border:1px solid var(--line);border-radius:12px;box-shadow:0 14px 34px -10px rgba(0,0,0,.4);padding:5px;min-width:220px;animation:cardIn .2s var(--ease-pop)}
+.pm-pop[hidden]{display:none}
+.pm-pop button{display:block;width:100%;text-align:left;background:none;border:none;color:var(--ink);font:inherit;font-size:.9rem;padding:8px 10px;border-radius:8px;cursor:pointer}
+.pm-pop button:hover{background:var(--tint)}
+/* post-it */
+.pi{display:flex;flex-direction:column;min-height:130px}
+.pi textarea{flex:1;min-height:60px}
+.pi-title{border:none;background:none;outline:none;font:inherit;font-weight:700;font-size:.98rem;color:#3a3320;width:100%;padding:2px 0 4px;border-bottom:1px solid rgba(58,51,32,.16);margin-bottom:4px;cursor:text}
+.pi-title::placeholder{color:rgba(58,51,32,.4);font-weight:600}
+.pi-tag{font-size:.72rem;padding:2px 8px;border-radius:999px;background:rgba(255,255,255,.8);font-weight:700;color:#3a3320}.pi-tag.past{opacity:.7}
+.pi-pin{font-size:.6rem;color:#a14;margin-right:2px}
+.pi-b.dots{margin-left:auto}
+.pi-rs{position:absolute;right:2px;bottom:2px;width:18px;height:18px;cursor:nwse-resize;opacity:.35}
+.pi-rs::after{content:"";position:absolute;right:4px;bottom:4px;width:8px;height:8px;border-right:2px solid #3a3320;border-bottom:2px solid #3a3320}
+.pi:hover .pi-rs{opacity:.7}
+.pi-menu{position:absolute;right:0;top:30px;z-index:5;width:200px;background:#fffdf5;color:#3a3320;border-radius:12px;box-shadow:0 14px 30px -8px rgba(40,30,0,.5);padding:6px;cursor:default}
+.pm-sws{display:flex;gap:6px;padding:6px 6px 8px}
+.pm-sw{width:22px;height:22px;border-radius:50%;border:2px solid transparent;box-shadow:0 0 0 1px rgba(58,51,32,.25);padding:0;cursor:pointer}.pm-sw.on{border-color:#3a3320}
+.pm-row{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;background:none;border:none;text-align:left;font:inherit;font-size:.86rem;padding:7px 8px;border-radius:8px;color:#3a3320;cursor:pointer}
+.pm-row:hover{background:rgba(58,51,32,.08)}.pm-row.del{color:#a02020}
+.pm-row input{font:inherit;font-size:.82rem;border:1px solid rgba(58,51,32,.25);border-radius:6px;background:#fff;padding:1px 4px;color:#3a3320}
+/* pastille d'onglets déplaçable */
+.rail-grip{align-self:stretch;height:16px;margin-bottom:2px;cursor:grab;border-radius:10px;background:radial-gradient(circle,rgba(255,255,255,.45) 1.3px,transparent 1.7px) center/7px 7px repeat-x;opacity:.7;touch-action:none}
+.rail-grip:hover{opacity:1}
+nav.tabs#drawer.moving{cursor:grabbing}
+nav.tabs#drawer.rail-l{align-items:flex-start!important}
+nav.tabs#drawer.rail-l button{flex-direction:row!important}
 </style>
 </head>
 <body>
@@ -2048,10 +2083,11 @@ body.pwa .burger{display:none}
     <div class="brand"><h1 aria-label="Encyclopédie"><span style="--d:0ms" aria-hidden="true">E</span><span style="--d:110ms" aria-hidden="true">n</span><span style="--d:220ms" aria-hidden="true">c</span><span style="--d:330ms" aria-hidden="true">y</span><span style="--d:440ms" aria-hidden="true">c</span><span style="--d:550ms" aria-hidden="true">l</span><span style="--d:660ms" aria-hidden="true">o</span><span style="--d:770ms" aria-hidden="true">p</span><span style="--d:880ms" aria-hidden="true">é</span><span style="--d:990ms" aria-hidden="true">d</span><span style="--d:1100ms" aria-hidden="true">i</span><span style="--d:1210ms" aria-hidden="true">e</span></h1></div>
   </header>
   <nav class="tabs rail" id="drawer" role="tablist" aria-label="Sections">
+      <span class="rail-grip" id="rail-grip" title="Glisser pour déplacer les onglets"></span>
       <button role="tab" data-view="bureau" aria-selected="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-6 8 6v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg><span>Bureau</span></button>
       <button role="tab" data-view="carte" aria-selected="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4L3 6.5v13L9 17l6 3 6-2.500v-13L15 7zM9 4v13M15 7v13"/></svg><span>Carte</span></button>
       <button role="tab" data-view="especes" aria-selected="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-4.500-7-10a4 4 0 0 1 7-2.600A4 4 0 0 1 19 11c0 5.500-7 10-7 10z"/></svg><span>Espèces</span></button>
-      <button role="tab" data-view="arbre" aria-selected="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v6M12 9c0 3-3 4-5 7l-1 4M12 9c0 3 3 4 5 7l1 4M12 9v12M9.300 13.800L5 13M14.700 13.800L19 13"/></svg><span>Arbre</span></button>
+      <button role="tab" data-view="arbre" aria-selected="false"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v10M12 6.500L9 5M12 9.500c2 0 3.500-1 4.500-3M12 13c0 3-2 4.500-5 4.500M12 13c0 2.500 2.500 4.500 6 4.500 1.500 0 2.500-1 3-2.500"/></svg><span>Arbre</span></button>
   </nav>
   <div id="hstatus" class="statchip" aria-live="polite"></div>
   <button class="avatar fab" id="fab" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Menu : couleurs, mode sombre, contrôles" title="Menu (glisse pour me déplacer)"><span class="fab-badge" id="fab-badge" hidden></span></button>
@@ -4868,34 +4904,49 @@ function outForm(o) {
 }
 
 /* ---------- post-it : libres sur toute la page du Bureau ---------- */
+let bdPiMenu = null; const bdPiSeen = new Set();
 function renderBoard() {
   const b = $('#bd-board'); if (!b || !BD) return; const today = bdToday();
   BD.notes.forEach(n => { if (n.y <= 1.5) n.y = 760 + n.y * 380; });   // anciens post-it : position relative au cadre → position sur la page
-  b.innerHTML = BD.notes.map(n => '<div class="pi' + (n.pin ? ' pin' : '') + '" data-id="' + n.id + '" style="left:' + (n.x * 100).toFixed(2) + '%;top:' + Math.round(n.y) + 'px;background:' + n.c + ';--r:' + (n.r || 0) + 'deg;z-index:' + (n.pin ? 900 : (n.z || 1)) + '"><div class="pi-bar"><button type="button" class="pi-b" data-pi="pin" title="Épingler (toujours au-dessus)" aria-label="Épingler"><svg viewBox="0 0 24 24" width="14" height="14" fill="' + (n.pin ? 'currentColor' : 'none') + '" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M9 3h6l-1 6 3 3H7l3-3-1-6zM12 12v8"/></svg></button><button type="button" class="pi-b" data-pi="col" title="Changer de couleur" aria-label="Couleur"><i style="background:' + n.c + '"></i></button><label class="pi-date' + (n.date ? ' set' : '') + '" title="Associer une date">' + (n.date ? bdFmt(n.date, { day: 'numeric', month: 'short' }) + (n.date < today ? ' ·' : '') : 'date') + '<input type="date" value="' + esc(n.date || '') + '" data-pi="date"></label><span class="pi-grip" title="Déplacer"></span><button type="button" class="pi-b x" data-pi="del" title="Supprimer" aria-label="Supprimer">×</button></div><textarea data-pi="txt" rows="4" placeholder="Écris ici…" spellcheck="false">' + esc(n.text || '') + '</textarea></div>').join('');
+  b.innerHTML = BD.notes.map(n => {
+    const sw = BD_COLORS.map(c => '<button type="button" class="pm-sw' + (c === n.c ? ' on' : '') + '" data-pi="setcol" data-c="' + c + '" style="background:' + c + '" aria-label="Couleur"></button>').join('');
+    const menu = bdPiMenu === n.id ? '<div class="pi-menu"><div class="pm-sws">' + sw + '</div><label class="pm-row">Date <input type="date" data-pi="date" value="' + esc(n.date || '') + '"></label>' + (n.date ? '<button type="button" class="pm-row" data-pi="nodate">Retirer la date</button>' : '') + '<button type="button" class="pm-row" data-pi="pin">' + (n.pin ? 'Ne plus épingler' : 'Épingler au-dessus') + '</button><button type="button" class="pm-row del" data-pi="del">Supprimer</button></div>' : '';
+    return '<div class="pi' + (n.pin ? ' pin' : '') + '" data-id="' + n.id + '" style="left:' + (n.x * 100).toFixed(2) + '%;top:' + Math.round(n.y) + 'px;width:' + Math.round(n.w || 210) + 'px;' + (n.h ? 'height:' + Math.round(n.h) + 'px;' : '') + 'background:' + n.c + ';--r:' + (n.r || 0) + 'deg;z-index:' + (n.pin ? 900 : (n.z || 1)) + (bdPiSeen.has(n.id) ? ';animation:none' : '') + '"><div class="pi-bar"><span class="pi-grip" title="Déplacer"></span>' + (n.pin ? '<span class="pi-pin" title="Épinglé">●</span>' : '') + (n.date ? '<span class="pi-tag' + (n.date < today ? ' past' : '') + '">' + bdFmt(n.date, { day: 'numeric', month: 'short' }) + '</span>' : '') + '<button type="button" class="pi-b dots" data-pi="menu" title="Options" aria-label="Options du post-it"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></button></div>' + menu + '<input class="pi-title" data-pi="title" placeholder="Titre" maxlength="60" spellcheck="false" value="' + esc(n.title || '') + '"><textarea data-pi="txt" placeholder="Écris ici…" spellcheck="false">' + esc(n.text || '') + '</textarea><i class="pi-rs" title="Taille"></i></div>';
+  }).join('');
+  BD.notes.forEach(n => bdPiSeen.add(n.id)); if (typeof bdLayFit === 'function') bdLayFit();
 }
 function bdNoteAdd() {
-  const v = $('#view-bureau'), pg = v.querySelector('.page'), W = pg.clientWidth, top = v.scrollTop + 90;
-  const c = BD_COLORS[BD.notes.length % BD_COLORS.length], n = { id: bdId(), text: '', c, x: Math.max(0.02, Math.min(0.8, (W * 0.5 - 95 + (Math.random() * 160 - 80)) / W)), y: Math.round(top + Math.random() * 60), r: Math.round((Math.random() * 4 - 2) * 10) / 10, date: '', pin: false, z: ++bdZ };
-  BD.notes.push(n); bdAskRW(); bdSave(); renderBoard(); const t = $('#bd-board .pi[data-id="' + n.id + '"] textarea'); if (t) t.focus();
+  const v = $('#view-bureau'), pg = v.querySelector('.page'), W = pg.clientWidth, top = v.scrollTop + 120;
+  const c = BD_COLORS[BD.notes.length % BD_COLORS.length], n = { id: bdId(), title: '', text: '', c, x: Math.max(0.02, Math.min(0.8, (W * 0.5 - 105 + (Math.random() * 160 - 80)) / W)), y: Math.round(top + Math.random() * 60), w: 210, h: 0, r: Math.round((Math.random() * 4 - 2) * 10) / 10, date: '', pin: false, z: ++bdZ };
+  BD.notes.push(n); bdAskRW(); bdSave(); renderBoard(); const t = $('#bd-board .pi[data-id="' + n.id + '"] .pi-title'); if (t) t.focus();
 }
 function bdBoardBind() {
   const b = $('#bd-board'), v = $('#view-bureau'); let drag = null, edge = null;
-  const scrollLoop = () => { if (!drag) return; const dy = drag.vy; if (dy) { v.scrollTop += dy; moveTo(drag.lx, drag.ly); } edge = requestAnimationFrame(scrollLoop); };
-  const moveTo = (cx, cy) => { const { pi, n } = drag, r = b.getBoundingClientRect(), w = pi.offsetWidth, h = pi.offsetHeight;
-    const x = Math.max(0, Math.min(r.width - w, cx - r.left - drag.dx)), y = Math.max(0, Math.min(r.height - h, cy - r.top - drag.dy)); n.x = x / r.width; n.y = y; pi.style.left = (n.x * 100) + '%'; pi.style.top = Math.round(y) + 'px'; };
+  const note = el => BD.notes.find(x => x.id === el.closest('.pi').dataset.id);
+  const scrollLoop = () => { if (!drag) return; const dy = drag.vy; if (dy && drag.kind === 'move') { v.scrollTop += dy; moveTo(drag.lx, drag.ly); } edge = requestAnimationFrame(scrollLoop); };
+  const moveTo = (cx, cy) => { const { pi, n } = drag, r = b.getBoundingClientRect(), w = pi.offsetWidth;
+    const x = Math.max(0, Math.min(r.width - w, cx - r.left - drag.dx)), y = Math.max(0, Math.min(r.height - 40, cy - r.top - drag.dy)); n.x = x / r.width; n.y = y; pi.style.left = (n.x * 100) + '%'; pi.style.top = Math.round(y) + 'px'; };
   b.addEventListener('pointerdown', e => {
-    const pi = e.target.closest('.pi'); if (!pi) return; const n = BD.notes.find(x => x.id === pi.dataset.id); if (!n) return;
+    const pi = e.target.closest('.pi'); if (!pi) return; const n = note(pi); if (!n) return;
     n.z = ++bdZ; if (!n.pin) pi.style.zIndex = n.z;
-    if (e.target.closest('textarea,button,label,input')) return;
-    const pr = pi.getBoundingClientRect(); drag = { n, pi, dx: e.clientX - pr.left, dy: e.clientY - pr.top, vy: 0, lx: e.clientX, ly: e.clientY }; pi.classList.add('drag'); pi.setPointerCapture(e.pointerId); e.preventDefault(); edge = requestAnimationFrame(scrollLoop);
+    const rs = e.target.closest('.pi-rs');
+    if (rs) { drag = { kind: 'rs', n, pi, sx: e.clientX, sy: e.clientY, w0: pi.offsetWidth, h0: pi.offsetHeight }; pi.classList.add('drag'); pi.setPointerCapture(e.pointerId); e.preventDefault(); return; }
+    if (e.target.closest('textarea,button,label,input,.pi-menu')) return;
+    const pr = pi.getBoundingClientRect(); drag = { kind: 'move', n, pi, dx: e.clientX - pr.left, dy: e.clientY - pr.top, vy: 0, lx: e.clientX, ly: e.clientY }; pi.classList.add('drag'); pi.setPointerCapture(e.pointerId); e.preventDefault(); edge = requestAnimationFrame(scrollLoop);
   });
-  b.addEventListener('pointermove', e => { if (!drag) return; drag.lx = e.clientX; drag.ly = e.clientY; const vr = v.getBoundingClientRect(); drag.vy = e.clientY > vr.bottom - 50 ? 14 : e.clientY < vr.top + 60 ? -14 : 0; moveTo(e.clientX, e.clientY); });
-  const end = () => { if (!drag) return; cancelAnimationFrame(edge); drag.pi.classList.remove('drag'); drag = null; bdSave(); }; b.addEventListener('pointerup', end); b.addEventListener('pointercancel', end);
-  b.addEventListener('input', e => { const t = e.target.closest('[data-pi="txt"]'); if (!t) return; const n = BD.notes.find(x => x.id === t.closest('.pi').dataset.id); if (n) { n.text = t.value; bdSave(); } });
-  b.addEventListener('change', e => { const t = e.target.closest('[data-pi="date"]'); if (!t) return; const n = BD.notes.find(x => x.id === t.closest('.pi').dataset.id); if (n) { n.date = t.value; bdSave(); renderBoard(); renderCalendar(); } });
+  b.addEventListener('pointermove', e => { if (!drag) return;
+    if (drag.kind === 'rs') { const w = Math.max(150, Math.min(640, drag.w0 + e.clientX - drag.sx)), h = Math.max(110, Math.min(900, drag.h0 + e.clientY - drag.sy)); drag.n.w = w; drag.n.h = h; drag.pi.style.width = w + 'px'; drag.pi.style.height = h + 'px'; return; }
+    drag.lx = e.clientX; drag.ly = e.clientY; const vr = v.getBoundingClientRect(); drag.vy = e.clientY > vr.bottom - 50 ? 14 : e.clientY < vr.top + 60 ? -14 : 0; moveTo(e.clientX, e.clientY); });
+  const end = () => { if (!drag) return; cancelAnimationFrame(edge); drag.pi.classList.remove('drag'); drag = null; bdSave(); if (typeof bdLayFit === 'function') bdLayFit(); }; b.addEventListener('pointerup', end); b.addEventListener('pointercancel', end);
+  b.addEventListener('input', e => { const t = e.target.closest('[data-pi="txt"],[data-pi="title"]'); if (!t) return; const n = note(t); if (!n) return; if (t.dataset.pi === 'txt') n.text = t.value; else n.title = t.value; bdSave(); });
+  b.addEventListener('change', e => { const t = e.target.closest('[data-pi="date"]'); if (!t) return; const n = note(t); if (n) { n.date = t.value; bdPiMenu = null; bdSave(); renderBoard(); renderCalendar(); } });
   b.addEventListener('click', e => { const bt = e.target.closest('[data-pi]'); if (!bt || bt.tagName === 'TEXTAREA' || bt.tagName === 'INPUT') return; const pi = bt.closest('.pi'), n = BD.notes.find(x => x.id === pi.dataset.id); if (!n) return;
-    const a = bt.dataset.pi; if (a === 'pin') n.pin = !n.pin; else if (a === 'col') n.c = BD_COLORS[(BD_COLORS.indexOf(n.c) + 1) % BD_COLORS.length]; else if (a === 'del') { pi.classList.add('bye'); setTimeout(() => { BD.notes = BD.notes.filter(x => x !== n); bdSave(); renderBoard(); renderCalendar(); }, 180); return; }
-    bdSave(); renderBoard(); });
+    const a = bt.dataset.pi;
+    if (a === 'menu') { bdPiMenu = bdPiMenu === n.id ? null : n.id; renderBoard(); return; }
+    if (a === 'pin') n.pin = !n.pin; else if (a === 'setcol') n.c = bt.dataset.c; else if (a === 'nodate') n.date = '';
+    else if (a === 'del') { pi.classList.add('bye'); bdPiMenu = null; setTimeout(() => { BD.notes = BD.notes.filter(x => x !== n); bdSave(); renderBoard(); renderCalendar(); }, 180); return; }
+    bdPiMenu = null; bdSave(); renderBoard(); renderCalendar(); });
+  document.addEventListener('pointerdown', e => { if (bdPiMenu && !e.target.closest('.pi-menu,[data-pi="menu"]')) { bdPiMenu = null; renderBoard(); } });
 }
 
 /* ---------- cibles : espèces à revoir / à compléter, avec les mois où tu les as déjà vues ---------- */
@@ -5012,7 +5063,7 @@ function bdModBuild() {
   const lay = $('#bd-lay'); lay.innerHTML = '';
   BD_MODS.forEach((m, i) => {
     const el = document.createElement('section'); el.className = 'bd-card mod' + (m.bare ? ' bare' : ''); el.dataset.mod = m.id; el.style.setProperty('--i', i); if (m.id === 'wx') el.id = 'bd-wxcard';
-    el.innerHTML = '<div class="mod-bar"><span class="mod-grip" title="Glisser pour déplacer" aria-label="Déplacer : ' + m.t + '">' + IC_GRIP + '</span><h3 title="Clique pour plier ou déplier">' + m.t + '</h3><button type="button" class="mod-b chev" data-mod-act="col" title="Plier / déplier" aria-label="Plier ou déplier" aria-expanded="true">' + IC_CHEV + '</button></div><div class="mod-body"><div class="mod-in">' + m.h + '</div></div><i class="mod-rs rs-e" data-rs="e"></i><i class="mod-rs rs-s" data-rs="s" title="Double-clic : ajuster à la hauteur du contenu"></i><i class="mod-rs rs-se" data-rs="se" title="Taille (double-clic : ajuster au contenu)"></i>';
+    el.innerHTML = '<div class="mod-bar"><span class="mod-grip" title="Glisser pour déplacer" aria-label="Déplacer : ' + m.t + '">' + IC_GRIP + '</span><h3 title="Clique pour plier ou déplier">' + esc((BD.ui.names && BD.ui.names[m.id]) || m.t) + '</h3><button type="button" class="mod-b" data-mod-act="menu" title="Options du bloc" aria-label="Options du bloc"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></button><button type="button" class="mod-b chev" data-mod-act="col" title="Plier / déplier" aria-label="Plier ou déplier" aria-expanded="true">' + IC_CHEV + '</button></div><div class="mod-body"><div class="mod-in">' + m.h + '</div></div><i class="mod-rs rs-e" data-rs="e"></i><i class="mod-rs rs-s" data-rs="s" title="Double-clic : ajuster à la hauteur du contenu"></i><i class="mod-rs rs-se" data-rs="se" title="Taille (double-clic : ajuster au contenu)"></i>';
     bdMods[m.id] = el; lay.appendChild(el); if (BD.ui.col && BD.ui.col[m.id]) { el.classList.add('collapsed'); el.querySelector('.chev').setAttribute('aria-expanded', 'false'); }
   });
   setTimeout(() => lay.classList.add('settled'), 1100);
@@ -5021,7 +5072,7 @@ function bdModApply(el, p, W) {
   const col = el.classList.contains('collapsed'), w = Math.max(MOD_MINW, Math.min(W, Math.round(p.w * W))), x = Math.max(0, Math.min(W - w, Math.round(p.x * W)));
   el.style.left = x + 'px'; el.style.top = Math.round(p.y) + 'px'; el.style.width = w + 'px'; el.style.height = (col ? modCollH(el) : Math.round(p.h)) + 'px'; el.style.zIndex = p.z || 1;
 }
-function bdLayFit() { const lay = $('#bd-lay'); if (!lay) return; let m = 0; Object.values(bdMods).forEach(el => { m = Math.max(m, el.offsetTop + el.offsetHeight); }); lay.style.height = Math.max(260, m + 48) + 'px'; }
+function bdLayFit() { const lay = $('#bd-lay'); if (!lay) return; let m = 0; Object.values(bdMods).forEach(el => { m = Math.max(m, el.offsetTop + el.offsetHeight); }); if (BD) BD.notes.forEach(n => { m = Math.max(m, n.y + (n.h || 190) - lay.offsetTop); }); lay.style.height = Math.max(260, m + 48) + 'px'; }
 function bdModApplyAll() {
   const W = bdLayW(); if (!W) return; const pos = BD.ui.pos || bdAutoPos; let bottom = 0; Object.values(pos).forEach(p => { bottom = Math.max(bottom, p.y + (p.h || 0)); });
   BD_MODS.forEach(m => { let p = pos[m.id]; if (!p) { p = pos[m.id] = { x: 0, y: bottom + MOD_G, w: m.wide ? 1 : 0.4, h: 320, z: 1 }; bottom += 336; } bdModApply(bdMods[m.id], p, W); });
@@ -5031,10 +5082,10 @@ function bdAuto(force) {   /* rangement de départ, tant que tu n'as rien dépla
   clearTimeout(bdAutoT); bdAutoT = setTimeout(() => {
     const lay = $('#bd-lay'); if (!lay || !BD || (BD.ui.pos && !force)) return; const W = lay.clientWidth; if (!W || !S.data) return;
     if (force) BD.ui.pos = null;
-    const n = Math.max(1, Math.min(4, Math.floor((W + MOD_G) / 446))), cw = (W - (n - 1) * MOD_G) / n, colH = new Array(n).fill(0), auto = {};
+    const PL = 26, PR = 96, AW = W - PL - PR, n = Math.max(1, Math.min(4, Math.floor((AW + MOD_G) / 446))), cw = (AW - (n - 1) * MOD_G) / n, colH = new Array(n).fill(0), auto = {};
     const nat = (el, w) => { el.style.transition = 'none'; el.style.width = w + 'px'; el.style.height = 'auto'; const h = Math.ceil(el.offsetHeight) + 2; el.style.transition = ''; return h; };
-    BD_MODS.filter(m => !m.wide).forEach(m => { let k = 0; colH.forEach((h, i) => { if (h < colH[k]) k = i; }); const h = nat(bdMods[m.id], cw); auto[m.id] = { x: k * (cw + MOD_G) / W, y: colH[k], w: cw / W, h: bdMods[m.id].classList.contains('collapsed') ? 300 : h, z: 1 }; colH[k] += (bdMods[m.id].classList.contains('collapsed') ? modCollH(bdMods[m.id]) : h) + MOD_G; });
-    BD_MODS.filter(m => m.wide).forEach(m => { const y = Math.max(...colH); const h = Math.min(nat(bdMods[m.id], W), 1100); auto[m.id] = { x: 0, y, w: 1, h, z: 1 }; });
+    BD_MODS.filter(m => !m.wide).forEach(m => { let k = 0; colH.forEach((h, i) => { if (h < colH[k]) k = i; }); const h = nat(bdMods[m.id], cw); auto[m.id] = { x: (PL + k * (cw + MOD_G)) / W, y: colH[k], w: cw / W, h: bdMods[m.id].classList.contains('collapsed') ? 300 : h, z: 1 }; colH[k] += (bdMods[m.id].classList.contains('collapsed') ? modCollH(bdMods[m.id]) : h) + MOD_G; });
+    BD_MODS.filter(m => m.wide).forEach(m => { const y = Math.max(...colH); const h = Math.min(nat(bdMods[m.id], AW), 1100); auto[m.id] = { x: PL / W, y, w: AW / W, h, z: 1 }; });
     bdAutoPos = auto; bdModApplyAll(); if (inatMap) inatMap.invalidateSize();
   }, 350);
 }
@@ -5052,28 +5103,57 @@ function bdModToggle(el) {
   else { el.classList.remove('collapsed'); if (p.h < 100) { el.style.transition = 'none'; el.style.height = 'auto'; p.h = Math.ceil(el.offsetHeight) + 2; el.style.height = modCollH(el) + 'px'; el.offsetHeight; el.style.transition = ''; } el.style.height = p.h + 'px'; }
   bdSave(); clearTimeout(el._t); el._t = setTimeout(() => { el.classList.remove('anim'); bdLayFit(); if (id === 'inat' && inatMap) inatMap.invalidateSize(); }, 420);
 }
+function bdRename(el) {
+  const id = el.dataset.mod, m = BD_MODS.find(x => x.id === id), h = el.querySelector('h3'); if (!h) return;
+  const inp = document.createElement('input'); inp.className = 'mod-ren'; inp.value = h.textContent; inp.maxLength = 40; h.replaceWith(inp); inp.focus(); inp.select(); let done = false;
+  const fin = ok => { if (done) return; done = true; const t = inp.value.trim(), N = BD.ui.names || (BD.ui.names = {}); if (ok) { if (t && t !== m.t) N[id] = t; else delete N[id]; bdSave(); } const h3 = document.createElement('h3'); h3.title = 'Clique pour plier ou déplier'; h3.textContent = N[id] || m.t; inp.replaceWith(h3); };
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter') fin(true); else if (e.key === 'Escape') fin(false); e.stopPropagation(); }); inp.addEventListener('blur', () => fin(true));
+}
+function bdModMenu(el, btn) {
+  let mm = $('#mod-menu'); if (!mm) { mm = document.createElement('div'); mm.id = 'mod-menu'; mm.className = 'pm-pop'; document.body.appendChild(mm); document.addEventListener('pointerdown', e => { if (!e.target.closest('#mod-menu,[data-mod-act="menu"]')) mm.hidden = true; }); document.addEventListener('keydown', e => { if (e.key === 'Escape') mm.hidden = true; }); mm.addEventListener('click', e => { const b = e.target.closest('[data-mm]'); if (!b) return; mm.hidden = true; const t = mm._el, id = t.dataset.mod; if (b.dataset.mm === 'ren') setTimeout(() => bdRename(t), 30); else if (b.dataset.mm === 'fit') bdAutoH(id); else if (b.dataset.mm === 'ren0') { if (BD.ui.names) delete BD.ui.names[id]; bdSave(); t.querySelector('h3').textContent = BD_MODS.find(x => x.id === id).t; } }); }
+  const id = el.dataset.mod, renamed = !!(BD.ui.names && BD.ui.names[id]); mm._el = el;
+  mm.innerHTML = '<button type="button" data-mm="ren">Renommer le titre</button><button type="button" data-mm="fit">Ajuster à la hauteur du contenu</button>' + (renamed ? '<button type="button" data-mm="ren0">Remettre le titre d\'origine</button>' : '');
+  const r = btn.getBoundingClientRect(); mm.hidden = false; mm.style.left = Math.max(8, Math.min(innerWidth - mm.offsetWidth - 8, r.right - mm.offsetWidth)) + 'px'; mm.style.top = Math.min(innerHeight - mm.offsetHeight - 8, r.bottom + 6) + 'px';
+}
+let encRailOn = false;
+function encRail() {   /* la pastille d'onglets se déplace comme la bille : on l'attrape par sa poignée */
+  const nav = $('#drawer'), g = $('#rail-grip'); if (!nav || !g || encRailOn) return; encRailOn = true; const K = 'enc_rail'; let st = null; try { st = JSON.parse(localStorage.getItem(K) || 'null'); } catch (_) { st = null; }
+  const put = (p, drag) => { const w = nav.offsetWidth || 58, h = nav.offsetHeight || 200; const y = Math.max(6, Math.min(innerHeight - h - 6, p.y));
+    nav.classList.toggle('rail-l', p.s === 'l'); const set = (k, v) => nav.style.setProperty(k, v, 'important');
+    set('top', y + 'px'); set('transform', 'none');
+    if (drag) { set('left', Math.max(6, Math.min(innerWidth - w - 6, p.x)) + 'px'); set('right', 'auto'); return; }
+    if (p.s === 'l') { set('left', Math.max(6, Math.min(innerWidth - w - 6, p.d)) + 'px'); set('right', 'auto'); } else { set('right', Math.max(6, Math.min(innerWidth - w - 6, p.d)) + 'px'); set('left', 'auto'); } };
+  if (st && st.y != null) put(st);
+  let d = null;
+  g.addEventListener('pointerdown', e => { const r = nav.getBoundingClientRect(); d = { ox: e.clientX - r.left, oy: e.clientY - r.top }; g.setPointerCapture(e.pointerId); nav.classList.add('moving'); e.preventDefault(); });
+  g.addEventListener('pointermove', e => { if (d) put({ x: e.clientX - d.ox, y: e.clientY - d.oy, s: 'r' }, true); });
+  const end = () => { if (!d) return; d = null; nav.classList.remove('moving'); const r = nav.getBoundingClientRect(), left = r.left + r.width / 2 < innerWidth / 2; st = left ? { s: 'l', d: r.left, y: r.top } : { s: 'r', d: innerWidth - r.right, y: r.top }; try { localStorage.setItem(K, JSON.stringify(st)); } catch (_) { /* rien */ } put(st); };
+  g.addEventListener('pointerup', end); g.addEventListener('pointercancel', end);
+  addEventListener('resize', () => { if (st) put(st); });
+}
+document.addEventListener('DOMContentLoaded', encRail); if (document.readyState !== 'loading') encRail();
 function bdModBind() {
   const lay = $('#bd-lay'), v = $('#view-bureau'); let d = null, raf = 0, lastW = 0; const snap = n => Math.round(n / 8) * 8;
   new ResizeObserver(() => { const W = lay.clientWidth; if (!W || W === lastW) return; lastW = W; if (BD.ui.pos) bdModApplyAll(); else bdAuto(); }).observe(lay);
-  lay.addEventListener('click', e => { const b = e.target.closest('[data-mod-act]'); if (b) bdModToggle(b.closest('.mod')); });
+  lay.addEventListener('click', e => { const b = e.target.closest('[data-mod-act]'); if (!b) return; const el = b.closest('.mod'); if (b.dataset.modAct === 'menu') bdModMenu(el, b); else bdModToggle(el); });
   lay.addEventListener('dblclick', e => { const r = e.target.closest('.rs-s,.rs-se'); if (r) bdAutoH(r.closest('.mod').dataset.mod); });
   const upd = () => {
     if (!d || !d.on) return; const W = d.W, dx = d.cx - d.sx, dy = d.cy - d.sy + (v.scrollTop - d.vs), p = d.p, el = d.el;
-    if (d.kind === 'move') { const w = p.w * W; p.x = Math.max(0, Math.min(W - w, snap(d.x0 + dx))) / W; p.y = Math.max(0, snap(d.y0 + dy)); el.style.left = Math.round(p.x * W) + 'px'; el.style.top = Math.round(p.y) + 'px'; }
-    if (d.kind === 'e' || d.kind === 'se') { const w = Math.max(MOD_MINW, Math.min(W - d.x0, snap(d.w0 + dx))); p.w = w / W; el.style.width = w + 'px'; }
-    if (d.kind === 's' || d.kind === 'se') { p.h = Math.max(80, snap(d.h0 + dy)); el.style.height = p.h + 'px'; }
+    if (d.kind === 'move') { const w = el.offsetWidth, x = Math.max(0, Math.min(W - w, d.x0 + dx)), y = Math.max(0, d.y0 + dy); p.x = x / W; p.y = y; el.style.transform = 'translate3d(' + Math.round(x - d.ex) + 'px,' + Math.round(y - d.ey) + 'px,0)'; const need = y + el.offsetHeight + 60, lay2 = $('#bd-lay'); if (need > lay2.offsetHeight) lay2.style.height = need + 'px'; return; }
+    if (d.kind === 'e' || d.kind === 'se') { const w = Math.max(MOD_MINW, Math.min(W - d.x0, d.w0 + dx)); p.w = w / W; el.style.width = w + 'px'; }
+    if (d.kind === 's' || d.kind === 'se') { p.h = Math.max(80, d.h0 + dy); el.style.height = Math.round(p.h) + 'px'; }
     bdLayFit();
   };
   const loop = () => { if (!d) return; if (d.kind === 'move') { const vr = v.getBoundingClientRect(), y = d.cy; v.scrollTop += y < vr.top + 70 ? -14 : y > vr.bottom - 70 ? 14 : 0; } upd(); raf = requestAnimationFrame(loop); };
   lay.addEventListener('pointerdown', e => {
     if (e.button) return; const rs = e.target.closest('.mod-rs'), bar = e.target.closest('.mod-bar'); if (!rs && !bar) return; if (e.target.closest('.mod-b')) return;
-    const el = e.target.closest('.mod'); if (rs && el.classList.contains('collapsed') && rs.dataset.rs !== 'e') return;
-    bdFreeze(); const p = BD.ui.pos[el.dataset.mod], W = bdLayW(); p.z = ++bdZ2; el.style.zIndex = p.z;
-    d = { el, p, kind: rs ? rs.dataset.rs : 'move', sx: e.clientX, sy: e.clientY, cx: e.clientX, cy: e.clientY, x0: p.x * W, y0: p.y, w0: p.w * W, h0: p.h, W, vs: v.scrollTop, on: false, bar: !!bar };
+    if (e.target.closest('.mod-ren')) return; const el = e.target.closest('.mod'); if (rs && el.classList.contains('collapsed') && rs.dataset.rs !== 'e') return;
+    bdFreeze(); const p = BD.ui.pos[el.dataset.mod], W = bdLayW(); if (bdZ2 > 300) { Object.entries(BD.ui.pos).sort((x, y) => (x[1].z || 0) - (y[1].z || 0)).forEach(([id, q], i) => { q.z = i + 1; if (bdMods[id]) bdMods[id].style.zIndex = q.z; }); bdZ2 = 20; } p.z = ++bdZ2; el.style.zIndex = p.z;
+    d = { el, p, ex: el.offsetLeft, ey: el.offsetTop, kind: rs ? rs.dataset.rs : 'move', sx: e.clientX, sy: e.clientY, cx: e.clientX, cy: e.clientY, x0: p.x * W, y0: p.y, w0: p.w * W, h0: p.h, W, vs: v.scrollTop, on: false, bar: !!bar };
     try { lay.setPointerCapture(e.pointerId); } catch (_) { /* rien */ } e.preventDefault();
   });
   lay.addEventListener('pointermove', e => { if (!d) return; d.cx = e.clientX; d.cy = e.clientY; if (!d.on && Math.hypot(d.cx - d.sx, d.cy - d.sy) > 5) { d.on = true; d.el.classList.add('dragging'); raf = requestAnimationFrame(loop); } });
-  const end = () => { if (!d) return; const k = d; d = null; cancelAnimationFrame(raf); k.el.classList.remove('dragging'); if (!k.on) { if (k.bar && k.kind === 'move') bdModToggle(k.el); return; } bdLayFit(); bdSave(); if (inatMap) setTimeout(() => inatMap.invalidateSize(), 60); };
+  const end = () => { if (!d) return; const k = d; d = null; cancelAnimationFrame(raf); k.el.classList.remove('dragging'); if (k.on && k.kind === 'move') { k.el.style.transform = ''; bdModApply(k.el, k.p, k.W); } if (!k.on) { if (k.bar && k.kind === 'move') bdModToggle(k.el); return; } bdLayFit(); bdSave(); if (inatMap) setTimeout(() => inatMap.invalidateSize(), 60); };
   lay.addEventListener('pointerup', end); lay.addEventListener('pointercancel', end);
 }
 function renderBureau() {
@@ -5129,7 +5209,7 @@ document.addEventListener('DOMContentLoaded', bdBoot); if (document.readyState !
 
 
 /* ---------- application installable + mise à jour de l'interface (seulement quand la page vient d'un site, pas d'un fichier) ---------- */
-const ENC_VERSION = '2026-11-26.6';
+const ENC_VERSION = '2026-11-26.7';
 function encPwa() {
   const v = $('#fm-ver'); if (v) v.textContent = 'Version ' + (/^__/.test(ENC_VERSION) ? 'de test' : ENC_VERSION);
   if (!('serviceWorker' in navigator) || !/^https?:$/.test(location.protocol)) return;
