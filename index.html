@@ -2078,6 +2078,14 @@ nav.tabs#drawer button span,nav.tabs#drawer:hover button span{opacity:1!importan
 .bd-top h2{font-size:1.45rem!important;font-weight:600!important;letter-spacing:-.015em!important}
 .bd-top p{font-size:.86rem!important;font-weight:500;letter-spacing:.01em;color:var(--ink2);margin-top:3px!important}
 .base-tile{background-color:#1b2b30!important}
+
+/* Espèces : mode « Classement » (par genre / famille / ordre / classe, A–Z) */
+.atlas-h{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px;position:static}
+.atlas-h .ah-rank{font-size:.68rem;text-transform:uppercase;letter-spacing:.12em;font-weight:700;color:var(--ink2);opacity:.75}
+.atlas-h .ah-name{font-size:1.15rem;color:var(--ink)}
+.atlas-h .ah-up{font-size:.82rem;font-weight:500;color:var(--ink2)}
+.atlas-h .ah-n{margin-left:auto;font-size:.78rem;font-weight:500;color:var(--ink2)}
+.atlas-h .ah-name.sci{font-style:italic}
 </style>
 </head>
 <body>
@@ -2195,7 +2203,8 @@ nav.tabs#drawer button span,nav.tabs#drawer:hover button span{opacity:1!importan
         <div class="field"><label for="s-famille">Famille</label><select id="s-famille"></select></div>
         <div class="field"><label for="s-quest">Quête</label><select id="s-quest">
           <option value="">Toutes</option><option value="0">Non commencée</option><option value="1">En cours</option><option value="3">Terminée</option></select></div>
-        <div class="field"><label>Affichage</label><div class="tseg dexmode" id="dex-mode" role="group" aria-label="Affichage"><button type="button" data-dm="dossiers" class="on">Dossiers</button><button type="button" data-dm="liste">Toutes</button></div></div>
+        <div class="field"><label>Affichage</label><div class="tseg dexmode" id="dex-mode" role="group" aria-label="Affichage"><button type="button" data-dm="dossiers" class="on">Dossiers</button><button type="button" data-dm="liste">Toutes</button><button type="button" data-dm="atlas" title="Toutes les espèces classées par genre, famille… dans l'ordre alphabétique">Classement</button></div></div>
+        <div class="field" id="dex-by-f" hidden><label for="dex-by">Classer par</label><select id="dex-by"><option value="Genre">Genre</option><option value="Famille">Famille</option><option value="Ordre">Ordre</option><option value="Classe">Classe</option></select></div>
         <div class="field"><label for="s-sort">Trier par</label><select id="s-sort">
           <option value="no">Ordre de découverte</option><option value="nom">Nom</option>
           <option value="famille">Famille</option>
@@ -3333,11 +3342,11 @@ function renderSpecies() {
   grid.classList.toggle('rows', S.dexLayout === 'liste'); $$('#dex-layout button').forEach(bt => bt.classList.toggle('on', bt.dataset.ly === (S.dexLayout || 'tuiles')));
   if (!S.data.species.length) { crumbs.innerHTML = ''; S.sheetList = []; grid.innerHTML = '<div class="empty">Aucune espèce dans ton tableur. Crée une fiche dans la feuille « Espèces », enregistre, puis rouvre tes fichiers.</div>'; return; }
   if (!list.length) { crumbs.innerHTML = ''; S.sheetList = []; grid.innerHTML = '<div class="empty">Aucune espèce ne correspond à cette recherche.</div>'; return; }
-  const cards = (arr, base) => {
+  const cards = (arr, base, nohdr) => {
     let lastFam = undefined;
     return arr.map((s, idx) => {
       const art = speciesArt(s), full = s.stepsDone === 3; let header = '';
-      if (sort === 'famille') {
+      if (sort === 'famille' && !nohdr) {
         const fam = s.v('Famille');
         if (fam !== lastFam) { header = '<h3 class="fam-header">' + (fam ? esc(fam) : 'Famille non renseignée') + '</h3>'; lastFam = fam; }
       }
@@ -3351,6 +3360,19 @@ function renderSpecies() {
     }).join('');
   };
   const filtering = !!(q || grp || fam || qs), asFolders = (S.dexMode || 'dossiers') === 'dossiers' && !filtering;
+  const dbf = $('#dex-by-f'); if (dbf) dbf.hidden = (S.dexMode || 'dossiers') !== 'atlas'; { const sf = $('#s-sort').closest('.field'); if (sf) sf.hidden = (S.dexMode || 'dossiers') === 'atlas'; } const dby = $('#dex-by'); if (dby) dby.value = S.dexBy || 'Genre';
+  if ((S.dexMode || 'dossiers') === 'atlas') {   /* classement : toutes les espèces, regroupées par classe / ordre / famille / genre, dans l'ordre alphabétique */
+    const by2 = S.dexBy || 'Genre', key = x => (x.v(by2) || '').trim() || (by2 === 'Genre' && x.sci ? x.sci.trim().split(/\s+/)[0] : ''), groups = new Map();
+    list.forEach(x => { const k = key(x); if (!groups.has(k)) groups.set(k, []); groups.get(k).push(x); });
+    const keys = Array.from(groups.keys()).sort((a, b) => (!a) - (!b) || a.localeCompare(b, 'fr')), flat = [];
+    const upper = { Genre: 'Famille', Famille: 'Ordre', Ordre: 'Classe', Classe: 'Embranchement' }[by2];
+    grid.innerHTML = keys.map((k, i) => {
+      const arr = groups.get(k).sort((a, b) => a.fr.localeCompare(b.fr, 'fr')); arr.forEach(x => flat.push(x.id));
+      const up = upper ? Array.from(new Set(arr.map(x => (x.v(upper) || '').trim()).filter(Boolean))).sort((a, b) => a.localeCompare(b, 'fr')).join(', ') : '';
+      return '<h3 class="fam-header atlas-h"><span class="ah-rank">' + by2 + '</span><span class="ah-name' + (by2 === 'Genre' ? ' sci' : '') + '">' + (k ? esc(k) : by2 + ' non renseigné') + '</span>' + (up ? '<span class="ah-up">' + esc(up) + '</span>' : '') + '<span class="ah-n">' + plural(arr.length, 'espèce', 'espèces') + '</span></h3>' + cards(arr, i * 3, true);
+    }).join('');
+    S.sheetList = flat; crumbs.innerHTML = '<span class="crumb-note">Classement par ' + by2.toLowerCase() + ' · ordre alphabétique · ' + plural(list.length, 'espèce', 'espèces') + '</span>'; settleCrops(grid); return;
+  }
   if (!asFolders) {
     S.sheetList = list.map(x => x.id);
     crumbs.innerHTML = filtering ? '<span class="crumb-note">Recherche dans toutes les espèces · ' + plural(list.length, 'résultat', 'résultats') + '</span>' : '';
@@ -4049,9 +4071,9 @@ function setAnim(on, noSave) {
   const b = $('#m-anim'); if (b) b.innerHTML = '<span>Animations : ' + (on ? 'activées' : 'désactivées') + '</span>';
   if (!noSave) savePrefs();
 }
-function savePrefs() { try { localStorage.setItem(PREF_KEY, JSON.stringify({ dark: S.dark, view: S.view, f: S.f, tm: S.timeMode, dm: S.dexMode, dl: S.dexLayout, fo: !!S.fopen, sh: !!S.sidehid, tb: !!S.tbar, eb: !!S.dexbar, an: S.anim !== false, hue: S.hueOv == null ? null : S.hueOv })); } catch (e) { /* stockage indisponible */ } }
+function savePrefs() { try { localStorage.setItem(PREF_KEY, JSON.stringify({ dark: S.dark, view: S.view, f: S.f, tm: S.timeMode, dm: S.dexMode, db: S.dexBy, dl: S.dexLayout, fo: !!S.fopen, sh: !!S.sidehid, tb: !!S.tbar, eb: !!S.dexbar, an: S.anim !== false, hue: S.hueOv == null ? null : S.hueOv })); } catch (e) { /* stockage indisponible */ } }
 function applyPrefs() {
-  const p = loadPrefs(); if (p.tm === 'annee' || p.tm === 'mois') S.timeMode = p.tm; if (p.dm === 'dossiers' || p.dm === 'liste') S.dexMode = p.dm; if (p.dl === 'liste' || p.dl === 'tuiles') S.dexLayout = p.dl; setAnim(p.an !== false, true); setSide(p.sh === false, true); setTbar(p.tb === true, true); setDexbar(p.eb === true, true);
+  const p = loadPrefs(); if (p.tm === 'annee' || p.tm === 'mois') S.timeMode = p.tm; if (p.dm === 'dossiers' || p.dm === 'liste' || p.dm === 'atlas') S.dexMode = p.dm; if (['Classe', 'Ordre', 'Famille', 'Genre'].includes(p.db)) S.dexBy = p.db; if (p.dl === 'liste' || p.dl === 'tuiles') S.dexLayout = p.dl; setAnim(p.an !== false, true); setSide(p.sh === false, true); setTbar(p.tb === true, true); setDexbar(p.eb === true, true);
   const f = p.f; if (!f || typeof f !== 'object') { syncFilterUI(); return; }
   const ok = (id, v) => v && Array.from($(id).options).some(o => o.value === String(v)), nf = defaultFilters();
   if (ok('#f-sp', f.sp)) nf.sp = f.sp; if (ok('#f-groupe', f.groupe)) nf.groupe = f.groupe; if (ok('#f-pays', f.pays)) nf.pays = f.pays; if (ok('#f-mode', f.mode)) nf.mode = f.mode;
@@ -4396,6 +4418,7 @@ function bindUI() {
   $('#s-q').addEventListener('input', renderSpecies);
   $$('#dex-layout button').forEach(bt => bt.addEventListener('click', () => { S.dexLayout = bt.dataset.ly; renderSpecies(); savePrefs(); }));
   $$('#dex-mode button').forEach(bt => bt.addEventListener('click', () => { S.dexMode = bt.dataset.dm; renderSpecies(); savePrefs(); }));
+  const dby = $('#dex-by'); if (dby) dby.addEventListener('change', () => { S.dexBy = dby.value; renderSpecies(); savePrefs(); });
   ['#s-groupe', '#s-famille', '#s-quest', '#s-sort'].forEach(id => $(id).addEventListener('change', renderSpecies));
   bindTree();
   $('#m-anim').addEventListener('click', () => { setAnim(S.anim === false); });
@@ -5254,7 +5277,7 @@ document.addEventListener('DOMContentLoaded', bdBoot); if (document.readyState !
 
 
 /* ---------- application installable + mise à jour de l'interface (seulement quand la page vient d'un site, pas d'un fichier) ---------- */
-const ENC_VERSION = '2026-11-27.13';
+const ENC_VERSION = '2026-11-27.14';
 function encPwa() {
   const v = $('#fm-ver'); if (v) v.textContent = 'Version ' + (/^__/.test(ENC_VERSION) ? 'de test' : ENC_VERSION);
   if (!('serviceWorker' in navigator) || !/^https?:$/.test(location.protocol)) return;
