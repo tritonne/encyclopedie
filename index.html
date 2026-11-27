@@ -1084,7 +1084,7 @@ html[data-theme=dark]{
 html[data-theme=dark] header.top{--soft:hsl(var(--h) calc(25% * var(--sf)) 80%);--tint:hsl(var(--h) calc(30% * var(--sf)) 94%);--teal:hsl(var(--h) calc(46% * var(--sf)) 34%)}
 html[data-theme=dark] .btn.primary{background:var(--teal);color:hsl(var(--h) 40% 8%)}
 html[data-theme=dark] .btn.primary:hover{background:hsl(var(--h) calc(45% * var(--sf)) 80%)}
-html[data-theme=dark] #map.base-light .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.9) contrast(.88)}
+html[data-theme=dark] #map .tl-light{filter:invert(1) hue-rotate(180deg) brightness(.9) contrast(.88)}
 .themebtn{display:grid;place-items:center;width:34px;height:30px;padding:0}
 .themebtn.wtheme{position:fixed;top:14px;right:14px;z-index:5;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:50%;width:38px;height:38px;cursor:pointer}
 header.top .themebtn{color:var(--tint)}
@@ -2070,6 +2070,14 @@ nav.tabs#drawer button span,nav.tabs#drawer:hover button span{opacity:1!importan
 .in-t.m2{border-color:#c3ccd4;box-shadow:0 0 0 2px #c3ccd4,0 0 14px -2px rgba(195,204,212,.6)}
 .in-t.m3{border-color:#e8b923;box-shadow:0 0 0 2px #e8b923,0 0 16px -2px rgba(232,185,35,.7)}
 .in-t.m1.sel,.in-t.m2.sel,.in-t.m3.sel{background:var(--tint)}
+
+/* bannière de mise à jour : tout est centré, le bouton au milieu */
+.upd,body.pwa .upd{flex-direction:column!important;align-items:center!important;text-align:center;gap:10px!important;padding:14px 26px 16px!important;border-radius:20px!important}
+.upd button{min-width:140px}
+/* Bureau : titre et date plus sobres */
+.bd-top h2{font-size:1.45rem!important;font-weight:600!important;letter-spacing:-.015em!important}
+.bd-top p{font-size:.86rem!important;font-weight:500;letter-spacing:.01em;color:var(--ink2);margin-top:3px!important}
+.base-tile{background-color:#1b2b30!important}
 </style>
 </head>
 <body>
@@ -2890,8 +2898,7 @@ function updateBaseTile() {
   const nb = BASES[((S.baseIdx || 0) + 1) % BASES.length], u = nb.url.replace('{z}', 5).replace('{y}', 11).replace('{x}', 16), fb = 'url("' + (BASE_FALL[nb.id] || BASE_FALL.light) + '")', k = nb.id;
   t.dataset.want = k;
   const apply = () => { if (t.dataset.want === k) t.style.backgroundImage = 'url("' + u + '"), ' + fb; };
-  if (!t.style.backgroundImage) t.style.backgroundImage = fb;
-  const im = new Image(); im.onload = apply; im.onerror = () => { /* on garde le motif de secours */ }; im.src = u; if (im.complete && im.naturalWidth) apply();
+  const im = new Image(); im.onload = apply; im.onerror = () => { if (!t.style.backgroundImage) t.style.backgroundImage = fb; }; im.src = u; if (im.complete && im.naturalWidth) apply();
   $('#bt-name').textContent = nb.id === 'sat' ? 'Satellite' : nb.id === 'light' ? 'Plan' : nb.name; t.setAttribute('aria-label', 'Passer au fond « ' + nb.name + ' »'); t.title = nb.name;
 }
 /* Onde de distorsion : carte de déplacement radiale (une seule fois), appliquée en backdrop-filter à un anneau qui grandit */
@@ -2924,7 +2931,7 @@ function setBase(i, anim) {
   const land = buildLand();
   if (land && S.map.hasLayer(land)) S.map.removeLayer(land);
   let ok = 0, err = 0;
-  const tl = L.tileLayer(b.url, b.opt).addTo(S.map); S.baseLayer = tl;
+  const tl = L.tileLayer(b.url, Object.assign({}, b.opt, b.id === 'light' ? { className: 'tl-light' } : {})).addTo(S.map); S.baseLayer = tl;
   tl.on('tileload', () => { ok++; });
   tl.on('tileerror', () => {
     err++;
@@ -3530,7 +3537,7 @@ function cadStop(save, reset) {
   if (!cad) return; const { cover, img, p } = cad; let txt = '';
   { const st = img.style; st.inset = ''; st.left = ''; st.top = ''; st.width = ''; st.height = ''; st.maxWidth = ''; st.objectFit = ''; st.transformOrigin = ''; }
   if (reset) { cadSave(p.key, null); cadApply(img, p.cad); }
-  else if (save) { txt = cadText(); cadSave(p.key, [Math.round(cad.pos[0]), Math.round(cad.pos[1]), Math.round(cad.pos[2] * 100) / 100]); }
+  else if (save) { txt = cadText(); const sv = [Math.round(cad.pos[0]), Math.round(cad.pos[1]), Math.round(cad.pos[2] * 100) / 100]; cadSave(p.key, sv); cadApply(img, sv); }
   else cadApply(img, cadOf(p));
   img.style.willChange = ''; cover.classList.remove('cad-edit', 'cad-drag', 'mode-move', 'mode-zoom'); if (cad.bar) cad.bar.remove(); cad = null;
   if (S.view === 'especes') renderSpecies(); else if (S.view === 'arbre' && S.tree) treeDraw();
@@ -5247,7 +5254,7 @@ document.addEventListener('DOMContentLoaded', bdBoot); if (document.readyState !
 
 
 /* ---------- application installable + mise à jour de l'interface (seulement quand la page vient d'un site, pas d'un fichier) ---------- */
-const ENC_VERSION = '2026-11-27.12';
+const ENC_VERSION = '2026-11-27.13';
 function encPwa() {
   const v = $('#fm-ver'); if (v) v.textContent = 'Version ' + (/^__/.test(ENC_VERSION) ? 'de test' : ENC_VERSION);
   if (!('serviceWorker' in navigator) || !/^https?:$/.test(location.protocol)) return;
