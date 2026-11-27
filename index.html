@@ -2059,6 +2059,17 @@ nav.tabs#drawer button span,nav.tabs#drawer:hover button span{opacity:1!importan
 #home .themebtn.wtheme,.themebtn.wtheme{right:auto!important;left:22px!important;top:22px!important}
 /* la barre d'onglets passe sous les fiches et le recadrage de photo (elle cachait le haut de la fiche) */
 #app nav.tabs.rail,nav.tabs#drawer.rail,nav.tabs#drawer{z-index:950!important}
+
+/* bannière de mise à jour : vraiment centrée (l'animation écrasait le translateX) */
+.upd,body.pwa .upd{left:0!important;right:0!important;margin:0 auto!important;transform:none!important;width:max-content;max-width:calc(100vw - 32px)}
+.base-tile{background-color:#1b2b30}
+
+/* iNaturalist : contour bronze / argent / or selon les quêtes déjà faites (1, 2 ou 3) */
+.in-t.has.medal{opacity:1}
+.in-t.m1{border-color:#b8793a;box-shadow:0 0 0 2px #b8793a,0 0 14px -2px rgba(184,121,58,.55)}
+.in-t.m2{border-color:#c3ccd4;box-shadow:0 0 0 2px #c3ccd4,0 0 14px -2px rgba(195,204,212,.6)}
+.in-t.m3{border-color:#e8b923;box-shadow:0 0 0 2px #e8b923,0 0 16px -2px rgba(232,185,35,.7)}
+.in-t.m1.sel,.in-t.m2.sel,.in-t.m3.sel{background:var(--tint)}
 </style>
 </head>
 <body>
@@ -2872,9 +2883,15 @@ const BASE_FALL = {
   light: 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#dfe8ea"/><path d="M0 40C14 34 22 44 34 36S52 30 64 38V64H0z" fill="#f5f7f6"/></svg>'),
   sat: 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#1f4a5c"/><path d="M0 38C14 30 24 42 36 33S52 28 64 36V64H0z" fill="#6b7d4a"/><path d="M10 52C20 46 30 54 44 48" stroke="#8a7a52" stroke-width="5" fill="none"/></svg>')
 };
+const prevOK = {};
 function updateBaseTile() {
-  const t = $('#base-tile'); if (!t) return; const nb = BASES[((S.baseIdx || 0) + 1) % BASES.length], u = nb.url.replace('{z}', 5).replace('{y}', 11).replace('{x}', 16);
-  t.style.backgroundImage = 'url("' + u + '"), url("' + (BASE_FALL[nb.id] || BASE_FALL.light) + '")';
+  const t = $('#base-tile'); if (!t) return;
+  BASES.forEach(b => { const u = b.url.replace('{z}', 5).replace('{y}', 11).replace('{x}', 16); if (!prevOK[u]) { prevOK[u] = 1; const im = new Image(); im.src = u; } });   // préchargement : plus de flash au 1er changement
+  const nb = BASES[((S.baseIdx || 0) + 1) % BASES.length], u = nb.url.replace('{z}', 5).replace('{y}', 11).replace('{x}', 16), fb = 'url("' + (BASE_FALL[nb.id] || BASE_FALL.light) + '")', k = nb.id;
+  t.dataset.want = k;
+  const apply = () => { if (t.dataset.want === k) t.style.backgroundImage = 'url("' + u + '"), ' + fb; };
+  if (!t.style.backgroundImage) t.style.backgroundImage = fb;
+  const im = new Image(); im.onload = apply; im.onerror = () => { /* on garde le motif de secours */ }; im.src = u; if (im.complete && im.naturalWidth) apply();
   $('#bt-name').textContent = nb.id === 'sat' ? 'Satellite' : nb.id === 'light' ? 'Plan' : nb.name; t.setAttribute('aria-label', 'Passer au fond « ' + nb.name + ' »'); t.title = nb.name;
 }
 /* Onde de distorsion : carte de déplacement radiale (une seule fois), appliquée en backdrop-filter à un anneau qui grandit */
@@ -2916,12 +2933,13 @@ function setBase(i, anim) {
       const l = buildLand(); if (l && !S.map.hasLayer(l)) S.map.addLayer(l);
     }
   });
-  if (oldLayer) {   // transition « goutte d'eau » : le nouveau fond s'étend en cercle depuis la pastille
+  if (oldLayer) {   // transition « goutte d'eau » : le nouveau fond s'étend en cercle depuis la pastille, une fois ses tuiles chargées (sinon flash blanc)
+    const o = S.baseOld = { layer: oldLayer, ring: [] }, el0 = tl.getContainer(); if (el0) el0.style.opacity = '0'; let started = false;
+    const go = () => { if (started || S.baseLayer !== tl || S.baseOld !== o) return; started = true; if (el0) el0.style.opacity = '';
     const mw = $('#mapwrap'), t = $('#base-tile'), mr = $('#map').getBoundingClientRect(), tr = t.getBoundingClientRect();
     const cx = tr.left + tr.width / 2 - mr.left, cy = tr.top + tr.height / 2 - mr.top;
     const lp = S.map.containerPointToLayerPoint(L.point(cx, cy));
     const R = Math.hypot(Math.max(cx, mr.width - cx), Math.max(cy, mr.height - cy)) + 60, D = 1300, el = tl.getContainer();
-    const o = S.baseOld = { layer: oldLayer, ring: [] };
     if (el && el.animate) {
       el.style.clipPath = 'circle(0px at ' + lp.x + 'px ' + lp.y + 'px)';
       o.anim = el.animate([{ clipPath: 'circle(0px at ' + lp.x + 'px ' + lp.y + 'px)' }, { clipPath: 'circle(' + (R * 0.9) + 'px at ' + lp.x + 'px ' + lp.y + 'px)' }], { duration: D, easing: 'cubic-bezier(.3,.6,.35,1)', fill: 'forwards' });
@@ -2931,6 +2949,8 @@ function setBase(i, anim) {
       mw.appendChild(r); o.ring.push(r);
       r.animate([{ width: '0px', height: '0px', opacity: 1 }, { width: 2 * Rw + 'px', height: 2 * Rw + 'px', opacity: 1, offset: .8 }, { width: 2 * Rw * 1.05 + 'px', height: 2 * Rw * 1.05 + 'px', opacity: 0 }], { duration: D, easing: 'cubic-bezier(.3,.6,.35,1)', fill: 'both' });
     } else finishBaseAnim();
+    };
+    tl.once('load', go); setTimeout(go, 1400);
   }
   updateBaseTile();
 }
@@ -3473,9 +3493,14 @@ function cadStart() {
   const bar = document.createElement('div'); bar.className = 'cad-tools';
   bar.innerHTML = cadBtn('cad-move', 'move', 'Déplacer la photo', 'on') + cadBtn('cad-zoom', 'zoom', 'Zoomer autour du point cliqué (glisse vers la droite ou le haut pour agrandir, vers la gauche ou le bas pour réduire ; ou molette)') + '<i class="cad-sep"></i>' + cadBtn('cad-reset', 'reset', 'Revenir au cadrage automatique', 'small') + cadBtn('cad-ok', 'ok', 'Terminer et enregistrer', 'small ok');
   document.body.appendChild(bar); cad.bar = bar;
-  { const r = cover.getBoundingClientRect(), iw = img.naturalWidth, ih = img.naturalHeight; if (iw && ih) { const k = Math.max(r.width / iw, r.height / ih); cad.g = { cw: r.width, ch: r.height, w: iw * k, h: ih * k }; } }
+  cadGeom();
   if (cad.g) { const st = img.style; st.inset = 'auto'; st.left = '0px'; st.top = '0px'; st.width = cad.g.w.toFixed(2) + 'px'; st.height = cad.g.h.toFixed(2) + 'px'; st.maxWidth = 'none'; st.objectFit = 'fill'; st.transformOrigin = '0 0'; }
   img.style.willChange = 'transform'; cadPlace(); cadShow();
+}
+function cadGeom() {
+  if (!cad) return; const cover = cad.cover, img = cad.img, cw = cover.offsetWidth, ch = cover.offsetHeight, iw = img.naturalWidth, ih = img.naturalHeight; if (!iw || !ih || !cw || !ch) return;
+  const k = Math.max(cw / iw, ch / ih); cad.g = { cw, ch, w: iw * k, h: ih * k };
+  const st = img.style; st.width = cad.g.w.toFixed(2) + 'px'; st.height = cad.g.h.toFixed(2) + 'px';
 }
 function cadMode(m) { if (!cad) return; cad.mode = m; cad.cover.classList.toggle('mode-move', m === 'move'); cad.cover.classList.toggle('mode-zoom', m === 'zoom'); cad.bar.querySelector('[data-action=cad-move]').classList.toggle('on', m === 'move'); cad.bar.querySelector('[data-action=cad-zoom]').classList.toggle('on', m === 'zoom'); }
 /* les outils se placent à gauche de la fiche (petit espace) pour qu'on voie la vignette ; sans place, en bas à gauche de l'écran */
@@ -3485,7 +3510,7 @@ function cadPlace() {
   if (r.left - w - 14 >= 8) { bar.classList.remove('low'); bar.style.left = (r.left - w - 14) + 'px'; bar.style.top = Math.max(8, cr.top) + 'px'; bar.style.bottom = ''; }
   else { bar.classList.add('low'); bar.style.left = '12px'; bar.style.top = ''; bar.style.bottom = '12px'; }
 }
-window.addEventListener('resize', () => cadPlace());
+window.addEventListener('resize', () => { cadPlace(); if (cad && cad.g) { cadGeom(); cadShow(); } });
 /* pendant l'édition : un seul transform (déplacement + zoom) calculé en pixels, sur la carte graphique → aucun tremblement */
 function cadShow() {
   if (!cad) return; const g = cad.g, z = cad.pos[2] || 1, P = cad.pos[0] / 100, Q = cad.pos[1] / 100, st = cad.img.style;
@@ -5047,9 +5072,9 @@ async function renderInat() {
   if (!c) { list.innerHTML = '<div class="bd-empty sm">Ajoute d\'abord une ville dans la météo : iNaturalist cherchera autour d\'elle.</div>'; return; }
   inatMapEnsure(c); list.innerHTML = '<div class="bd-note">Chargement…</div>';
   try {
-    const res = await inatGet(c, { radius: +o.radius || 25, per: o.per || (o.next ? 'next' : 'cur'), taxon: o.taxon || '' }), mine = new Set(S.data.species.map(s => (s.sci || '').trim().toLowerCase()).filter(Boolean));
-    const shown = res.filter(x => o.all || !mine.has(x.sci.toLowerCase())), tiles = shown.slice(0, inatMore).map(x => { const has = mine.has(x.sci.toLowerCase());
-      return '<button type="button" class="in-t' + (has ? ' has' : '') + (inatSel && inatSel.id === x.id ? ' sel' : '') + '" data-in="sp" data-sp="' + x.id + '" data-name="' + esc(x.fr || x.sci) + '" data-sci="' + esc(x.sci) + '" title="Voir où elle a été observée"><span class="in-p">' + (x.ph ? '<img loading="lazy" alt="" src="' + esc(x.ph) + '">' : '') + '</span><span class="in-b"><strong>' + esc(x.fr || x.sci) + '</strong><i>' + esc(x.sci) + '</i><small>' + x.n + ' obs.' + (has ? ' · déjà dans ton Pokédex' : '') + '</small></span></button>'; }).join('');
+    const res = await inatGet(c, { radius: +o.radius || 25, per: o.per || (o.next ? 'next' : 'cur'), taxon: o.taxon || '' }), mine = new Map(S.data.species.filter(s => (s.sci || '').trim()).map(s => [(s.sci || '').trim().toLowerCase(), s]));
+    const shown = res.filter(x => { const m = mine.get(x.sci.toLowerCase()); return o.all || !m || m.stepsDone < 3; }), tiles = shown.slice(0, inatMore).map(x => { const mm = mine.get(x.sci.toLowerCase()), has = !!mm, q = mm ? Math.min(3, mm.stepsDone || 0) : 0, medal = ['', 'bronze', 'argent', 'or'][q];
+      return '<button type="button" class="in-t' + (has ? ' has' : '') + (q ? ' medal m' + q : '') + (inatSel && inatSel.id === x.id ? ' sel' : '') + '" data-in="sp" data-sp="' + x.id + '" data-name="' + esc(x.fr || x.sci) + '" data-sci="' + esc(x.sci) + '" title="Voir où elle a été observée"><span class="in-p">' + (x.ph ? '<img loading="lazy" alt="" src="' + esc(x.ph) + '">' : '') + '</span><span class="in-b"><strong>' + esc(x.fr || x.sci) + '</strong><i>' + esc(x.sci) + '</i><small>' + x.n + ' obs.' + (has ? ' · dans ton Pokédex' + (q ? ' · contour ' + medal + ' (' + q + '/3 quêtes)' : '') : '') + '</small></span></button>'; }).join('');
     list.innerHTML = (tiles || '<div class="bd-empty sm">Rien de nouveau à signaler avec ces réglages.</div>') + (shown.length > inatMore ? '<button class="btn small in-more" type="button" data-in="more">Voir plus (' + (shown.length - inatMore) + ')</button>' : '') + (res._old ? '<div class="bd-note">Pas de connexion : données du ' + new Date(res._old).toLocaleString('fr-FR') + '.</div>' : '') + '<div class="bd-note">Source : iNaturalist (observations de qualité « recherche »). Photos © leurs auteurs. Seules les coordonnées arrondies de ta ville et la zone visible de la carte sont envoyées.</div>';
   } catch (_) { list.innerHTML = '<div class="bd-note">iNaturalist est indisponible pour le moment (il faut une connexion internet).</div>'; }
 }
@@ -5061,7 +5086,7 @@ function inatBind() {
   b.addEventListener('click', e => { if (e.target.closest('[data-in="more"]')) { inatMore += 12; renderInat(); return; } const t = e.target.closest('[data-in="sp"]'); if (t) inatPick(t.dataset.sp); });
 }
 /* ---------- page ---------- */
-function bdGreeting() { const h = new Date().getHours(); return h < 5 ? 'Bonne nuit' : h < 12 ? 'Bonjour' : h < 18 ? 'Bon après-midi' : 'Bonsoir'; }
+function bdGreeting() { const h = new Date().getHours(); return (h >= 18 || h < 5 ? 'Bonsoir' : 'Bonjour') + ' Triton !'; }
 /* modules du Bureau : posés où tu veux (glisser la barre du titre), taille réglable (bords et coin), clic sur le titre = plier / déplier */
 const BD_MODS = [
   { id: 'wx', t: 'Météo', h: '<div class="wx-row" id="bd-wx"></div><div id="bd-wx-detail"></div><div class="wx-tg"><button type="button" class="bd-link" id="bd-wx-toggle" data-bd="wx-toggle" aria-expanded="false" hidden>Réduire</button></div>', bare: 1 },
@@ -5222,7 +5247,7 @@ document.addEventListener('DOMContentLoaded', bdBoot); if (document.readyState !
 
 
 /* ---------- application installable + mise à jour de l'interface (seulement quand la page vient d'un site, pas d'un fichier) ---------- */
-const ENC_VERSION = '2026-11-26.10';
+const ENC_VERSION = '2026-11-27.12';
 function encPwa() {
   const v = $('#fm-ver'); if (v) v.textContent = 'Version ' + (/^__/.test(ENC_VERSION) ? 'de test' : ENC_VERSION);
   if (!('serviceWorker' in navigator) || !/^https?:$/.test(location.protocol)) return;
